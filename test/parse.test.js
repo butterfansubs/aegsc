@@ -19,4 +19,13 @@ describe('extractTemplateLines', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should extract a template line', function() {
+    const input = `%[a%]`;
+    const expected = ['a'];
+
+    const actual = extractTemplateLines(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
