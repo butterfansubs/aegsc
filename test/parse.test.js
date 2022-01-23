@@ -88,4 +88,18 @@ describe('parseTemplateLine', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should preserve escaped sigils in the header', function() {
+    const input = 'template syl # \\@actor \\\\ \\#1 @ 1';
+    const expected = {
+      layer: '1',
+      actor: '@actor \\ #1',
+      effect: 'template syl',
+      text: '',
+    };
+
+    const actual = parseTemplateLine(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });

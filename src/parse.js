@@ -19,7 +19,7 @@ function parseTemplateLine(templateLine) {
   const [header, ...text] = templateLine.split('\n');
   parsedTemplate.text = text.join('\n').trim();
 
-  const [effect, ...headerTokens] = header.split(/([@#])/).map((token) => token.trim());
+  const [effect, ...headerTokens] = header.split(/(?<!\\)([@#])/).map((token) => token.trim());
   parsedTemplate.effect = effect;
 
   let tokens = headerTokens;
@@ -27,7 +27,7 @@ function parseTemplateLine(templateLine) {
     const [sigil, value, ...rest] = tokens;
 
     if (sigil in sigilMap) {
-      parsedTemplate[sigilMap[sigil]] = value;
+      parsedTemplate[sigilMap[sigil]] = value.replace(/\\(.)/g, '$1');
     }
 
     tokens = rest;
