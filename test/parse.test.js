@@ -10,4 +10,13 @@ describe('extractTemplateLines', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should ignore non-template text', function() {
+    const input = 'no such template';
+    const expected = [];
+
+    const actual = extractTemplateLines(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
