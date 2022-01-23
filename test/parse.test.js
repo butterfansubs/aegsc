@@ -1,5 +1,5 @@
 const assert = require('assert/strict');
-const { extractTemplateLines } = require('../src/parse');
+const { extractTemplateLines, parseTemplateLine } = require('../src/parse');
 
 describe('extractTemplateLines', function() {
   it('should return empty for no input', function() {
@@ -52,6 +52,22 @@ Template 2
     const expected = ['a', 'b\n  c'];
 
     const actual = extractTemplateLines(input);
+
+    assert.deepEqual(actual, expected);
+  });
+});
+
+describe('parseTemplateLine', function() {
+  it('should return default object on empty input', function() {
+    const input = '';
+    const expected = {
+      layer: 0,
+      actor: '',
+      effect: '',
+      text: '',
+    };
+
+    const actual = parseTemplateLine(input);
 
     assert.deepEqual(actual, expected);
   });
