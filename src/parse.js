@@ -1,7 +1,7 @@
 function extractTemplateLines(text) {
-  const [templateLine] = text.match(/(?<=%\[).*(?=%\])/) ?? [];
+  const [templateLine] = text.match(/(?<=%\[).*(?=%\])/s) ?? [];
 
-  return templateLine ? [templateLine] : [];
+  return templateLine ? [templateLine.trim()] : [];
 }
 
 module.exports = {

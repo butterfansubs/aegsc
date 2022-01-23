@@ -28,4 +28,13 @@ describe('extractTemplateLines', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should extract a template line with newlines and trim whitespace', function() {
+    const input = `%[\na\n%]`;
+    const expected = ['a'];
+
+    const actual = extractTemplateLines(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
