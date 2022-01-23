@@ -4,7 +4,7 @@
   "description": "Compiler for .aegis files",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/bucket3432/aegiscc/issues"
   },
-  "homepage": "https://github.com/bucket3432/aegiscc#readme"
+  "homepage": "https://github.com/bucket3432/aegiscc#readme",
+  "devDependencies": {
+    "mocha": "^8.4.0"
+  }
 }
