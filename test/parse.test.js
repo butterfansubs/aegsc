@@ -71,4 +71,21 @@ describe('parseTemplateLine', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should parse fields', function() {
+    const input = `template syl # comment @ 0
+{
+    \\pos($sx, $sy)
+}`;
+    const expected = {
+      layer: '0',
+      actor: 'comment',
+      effect: 'template syl',
+      text: '{\n    \\pos($sx, $sy)\n}',
+    };
+
+    const actual = parseTemplateLine(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
