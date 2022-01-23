@@ -62,6 +62,9 @@ describe('parseTemplateLine', function() {
     const input = '';
     const expected = {
       layer: 0,
+      startTime: '0:00:00.00',
+      endTime: '0:00:00.00',
+      style: 'Default',
       actor: '',
       effect: '',
       text: '',
@@ -73,12 +76,15 @@ describe('parseTemplateLine', function() {
   });
 
   it('should parse fields', function() {
-    const input = `template syl # comment @ 0
+    const input = `template syl # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji
 {
     \\pos($sx, $sy)
 }`;
     const expected = {
       layer: '0',
+      startTime: '0:12:34.56',
+      endTime: '1:23:45.67',
+      style: 'romaji',
       actor: 'comment',
       effect: 'template syl',
       text: '{\n    \\pos($sx, $sy)\n}',
@@ -89,10 +95,13 @@ describe('parseTemplateLine', function() {
     assert.deepEqual(actual, expected);
   });
 
-  it('should preserve escaped sigils in the header', function() {
+  it('should preserve escaped sigil characters in the header', function() {
     const input = 'template syl # \\@actor \\\\ \\#1 @ 1';
     const expected = {
       layer: '1',
+      startTime: '0:00:00.00',
+      endTime: '0:00:00.00',
+      style: 'Default',
       actor: '@actor \\ #1',
       effect: 'template syl',
       text: '',

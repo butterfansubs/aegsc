@@ -5,12 +5,18 @@ function extractTemplateLines(text) {
 
 const sigilMap = {
   '@': 'layer',
+  '<': 'startTime',
+  '>': 'endTime',
+  '$': 'style',
   '#': 'actor',
 };
 
 function parseTemplateLine(templateLine) {
   const parsedTemplate = {
     layer: 0,
+    startTime: '0:00:00.00',
+    endTime: '0:00:00.00',
+    style: 'Default',
     actor: '',
     effect: '',
     text: '',
@@ -19,7 +25,7 @@ function parseTemplateLine(templateLine) {
   const [header, ...text] = templateLine.split('\n');
   parsedTemplate.text = text.join('\n').trim();
 
-  const [effect, ...headerTokens] = header.split(/(?<!\\)([@#])/).map((token) => token.trim());
+  const [effect, ...headerTokens] = header.split(/(?<!\\)([@<>$#])/).map((token) => token.trim());
   parsedTemplate.effect = effect;
 
   let tokens = headerTokens;
