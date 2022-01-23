@@ -1,0 +1,25 @@
+{
+  "name": "aegiscc",
+  "version": "1.0.0",
+  "description": "Compiler for .aegis files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bucket3432/aegiscc.git"
+  },
+  "keywords": [
+    "subtitles",
+    "karaoke",
+    "ass",
+    "aegisub"
+  ],
+  "author": "bucket3432",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bucket3432/aegiscc/issues"
+  },
+  "homepage": "https://github.com/bucket3432/aegiscc#readme"
+}
