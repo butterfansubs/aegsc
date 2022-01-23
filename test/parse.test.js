@@ -37,4 +37,22 @@ describe('extractTemplateLines', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should extract multiple template lines', function() {
+    const input = `
+%[
+  a
+%]
+Template 2
+%[
+  b
+  c
+%]
+    `;
+    const expected = ['a', 'b\n  c'];
+
+    const actual = extractTemplateLines(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
