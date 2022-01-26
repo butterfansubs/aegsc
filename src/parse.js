@@ -12,15 +12,7 @@ const sigilMap = {
 };
 
 function parseTemplateLine(templateLine) {
-  const parsedTemplate = {
-    layer: 0,
-    startTime: '0:00:00.00',
-    endTime: '0:00:00.00',
-    style: 'Default',
-    actor: '',
-    effect: '',
-    text: '',
-  };
+  const parsedTemplate = {};
 
   const [header, ...text] = templateLine.split('\n');
   parsedTemplate.text = text.join('\n').trim();

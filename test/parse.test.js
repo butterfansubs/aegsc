@@ -58,14 +58,9 @@ Template 2
 });
 
 describe('parseTemplateLine', function() {
-  it('should return default object on empty input', function() {
+  it('should return object with empty effect and text on empty input', function() {
     const input = '';
     const expected = {
-      layer: 0,
-      startTime: '0:00:00.00',
-      endTime: '0:00:00.00',
-      style: 'Default',
-      actor: '',
       effect: '',
       text: '',
     };
@@ -99,9 +94,6 @@ describe('parseTemplateLine', function() {
     const input = 'template syl # \\@actor \\\\ \\#1 @ 1';
     const expected = {
       layer: '1',
-      startTime: '0:00:00.00',
-      endTime: '0:00:00.00',
-      style: 'Default',
       actor: '@actor \\ #1',
       effect: 'template syl',
       text: '',
