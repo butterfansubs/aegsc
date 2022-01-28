@@ -24,5 +24,8 @@
   "homepage": "https://github.com/bucket3432/aegisc#readme",
   "devDependencies": {
     "mocha": "^8.4.0"
+  },
+  "dependencies": {
+    "luamin": "^1.0.4"
   }
 }
