@@ -1,3 +1,5 @@
+const luamin = require('luamin');
+
 function formatEvent({
   type,
   layer,
@@ -25,6 +27,14 @@ function formatEvent({
   ].join(',');
 }
 
+function minifyLua(code) {
+  const dollar = '____DOLLAR____';
+  const safeCode = code.replaceAll('$', dollar);
+  const minified = luamin.minify(safeCode);
+  return minified.replaceAll(dollar, '$');
+}
+
 module.exports = {
   formatEvent,
+  minifyLua,
 };

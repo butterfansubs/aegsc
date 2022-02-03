@@ -1,5 +1,5 @@
 const assert = require('assert/strict');
-const { formatEvent } = require('../src/format');
+const { formatEvent, minifyLua } = require('../src/format');
 
 describe('formatEvent', function() {
   it('should output a formatted ASS Comment event', function() {
@@ -21,5 +21,39 @@ describe('formatEvent', function() {
     const actual = formatEvent(input);
 
     assert.deepEqual(actual, expected);
+  });
+});
+
+describe('minifyLua', function() {
+  it('should minify Lua code', function() {
+    const input = String.raw`
+      function pos(x, y)
+        local v
+        if true then
+          v = true
+        else
+          v = false
+        end
+        return [[\pos(x,y)]]
+      end
+    `;
+    const expected = String.raw`function pos(a,b)local c;if true then c=true else c=false end;return[[\pos(x,y)]]end`;
+
+    const actual = minifyLua(input);
+
+    assert.equal(actual, expected);
+  });
+
+  it('should handle dollar variables correctly', function() {
+    const input = String.raw`
+      function pos()
+        return ([[\pos(%d,%d)]]):format($x, $y)
+      end
+    `;
+    const expected = String.raw`function pos()return([[\pos(%d,%d)]]):format($x,$y)end`;
+
+    const actual = minifyLua(input);
+
+    assert.equal(actual, expected);
   });
 });
