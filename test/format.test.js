@@ -28,7 +28,12 @@ describe('minifyLua', function() {
   it('should minify Lua code', function() {
     const input = String.raw`
       function pos(x, y)
-        local v
+        local v -- comment
+        --[[
+        multi
+        line
+        comment
+        ]]
         if true then
           v = true
         else
