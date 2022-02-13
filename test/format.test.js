@@ -1,5 +1,5 @@
 const assert = require('assert/strict');
-const { formatEvent, minifyLua } = require('../src/format');
+const { formatEvent, minifyLua, minifyTemplate } = require('../src/format');
 
 describe('formatEvent', function() {
   it('should output a formatted ASS Comment event', function() {
@@ -58,6 +58,20 @@ describe('minifyLua', function() {
     const expected = String.raw`function pos()return([[\pos(%d,%d)]]):format($x,$y)end`;
 
     const actual = minifyLua(input);
+
+    assert.equal(actual, expected);
+  });
+});
+
+describe('minifyTemplate', function() {
+  it('should remove newlines', function() {
+    const input = String.raw`{
+\pos($x,$y)
+\c&HFFFFFF&
+}`;
+    const expected = String.raw`{\pos($x,$y)\c&HFFFFFF&}`;
+
+    const actual = minifyTemplate(input);
 
     assert.equal(actual, expected);
   });

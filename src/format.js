@@ -34,7 +34,12 @@ function minifyLua(code) {
   return minified.replaceAll(dollar, '$');
 }
 
+function minifyTemplate(template) {
+  return template.split('\n').join('');
+}
+
 module.exports = {
   formatEvent,
   minifyLua,
+  minifyTemplate,
 };
