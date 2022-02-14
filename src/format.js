@@ -35,7 +35,10 @@ function minifyLua(code) {
 }
 
 function minifyTemplate(template) {
-  return template.split('\n').join('');
+  return template
+    .split('\n')
+    .map((line) => line.trim())
+    .join('');
 }
 
 module.exports = {

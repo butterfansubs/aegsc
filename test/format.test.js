@@ -75,4 +75,17 @@ describe('minifyTemplate', function() {
 
     assert.equal(actual, expected);
   });
+
+  it('should trim leading and trailing spaces', function() {
+    const input = String.raw`
+    {
+      \pos($x,$y)
+      \c&HFFFFFF&
+    }`;
+    const expected = String.raw`{\pos($x,$y)\c&HFFFFFF&}`;
+
+    const actual = minifyTemplate(input);
+
+    assert.equal(actual, expected);
+  });
 });
