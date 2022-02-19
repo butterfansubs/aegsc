@@ -4,6 +4,7 @@ function extractTemplateLines(text) {
 }
 
 const sigilMap = {
+  '^': 'type',
   '@': 'layer',
   '<': 'startTime',
   '>': 'endTime',
@@ -21,7 +22,7 @@ function parseTemplateLine(templateLine) {
     .split('\\\n')
     .map((line) => line.trim())
     .join(' ')
-    .split(/(?<!\\)([@<>$#])/)
+    .split(/(?<!\\)([@<>$#^])/)
     .map((token) => token.trim());
   parsedTemplate.effect = effect;
 
