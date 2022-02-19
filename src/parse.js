@@ -1,6 +1,6 @@
-function extractTemplateLines(text) {
+function extractTemplateBlocks(text) {
   return (text.match(/(?<=%\[).*?(?=%\])/gs) ?? [])
-    .map((line) => line.trim());
+    .map((block) => block.trim());
 }
 
 const sigilMap = {
@@ -15,15 +15,15 @@ const sigilMap = {
   '=V': 'marginV',
 };
 
-function parseTemplateLine(templateLine) {
+function parseTemplateBlock(templateBlock) {
   const parsedTemplate = {};
 
-  const [header, ...text] = templateLine.split(/(?<!\\)\n/);
+  const [header, ...text] = templateBlock.split(/(?<!\\)\n/);
   parsedTemplate.text = text.join('\n').trim();
 
   const [effect, ...headerTokens] = header
     .split('\\\n')
-    .map((line) => line.trim())
+    .map((block) => block.trim())
     .join(' ')
     .split(/(?<!\\)([@<>$#^]|=[LRV])/)
     .map((token) => token.trim());
@@ -44,6 +44,6 @@ function parseTemplateLine(templateLine) {
 }
 
 module.exports = {
-  extractTemplateLines,
-  parseTemplateLine,
+  extractTemplateBlocks,
+  parseTemplateBlock,
 };
