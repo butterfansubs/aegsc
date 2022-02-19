@@ -71,7 +71,7 @@ describe('parseTemplateLine', function() {
   });
 
   it('should parse fields', function() {
-    const input = `template syl ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji
+    const input = `template syl ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99
 {
     \\pos($sx, $sy)
 }`;
@@ -82,6 +82,9 @@ describe('parseTemplateLine', function() {
       endTime: '1:23:45.67',
       style: 'romaji',
       actor: 'comment',
+      marginL: '97',
+      marginR: '98',
+      marginV: '99',
       effect: 'template syl',
       text: '{\n    \\pos($sx, $sy)\n}',
     };

@@ -10,6 +10,9 @@ const sigilMap = {
   '>': 'endTime',
   '$': 'style',
   '#': 'actor',
+  '=L': 'marginL',
+  '=R': 'marginR',
+  '=V': 'marginV',
 };
 
 function parseTemplateLine(templateLine) {
@@ -22,7 +25,7 @@ function parseTemplateLine(templateLine) {
     .split('\\\n')
     .map((line) => line.trim())
     .join(' ')
-    .split(/(?<!\\)([@<>$#^])/)
+    .split(/(?<!\\)([@<>$#^]|=[LRV])/)
     .map((token) => token.trim());
   parsedTemplate.effect = effect;
 
