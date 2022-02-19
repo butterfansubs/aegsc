@@ -35,7 +35,10 @@ function minifyLua(code) {
 }
 
 function minifyASSText(ass) {
-  return ass.replaceAll('\n', ' ');
+  return ass
+    .split(/(\{[^}]*\})/)
+    .map((token) => token.replaceAll('\n', /^\{.*\}$/s.test(token) ? '' : ' '))
+    .join('');
 }
 
 function minifyTemplate(template) {

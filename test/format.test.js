@@ -70,10 +70,17 @@ describe('minifyLua', function() {
 
 describe('minifyASSText', function() {
   it('should replace newlines with spaces outside override blocks', function() {
-    const input = String.raw`a
-b
-c`;
+    const input = `a\nb\nc`;
     const expected = 'a b c';
+
+    const actual = minifyASSText(input);
+
+    assert.equal(actual, expected);
+  });
+
+  it('should remove newlines inside override blocks', function() {
+    const input = '{\na\nb\nc\n}';
+    const expected = '{abc}';
 
     const actual = minifyASSText(input);
 
