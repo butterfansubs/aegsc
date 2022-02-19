@@ -41,7 +41,7 @@ function minifyASSText(ass) {
 function minifyTemplate(template) {
   return template
     .split(/(![^!]*!)/)
-    .flatMap((token) =>{
+    .flatMap((token) => {
       const codeBlock = /^!(.*)!$/s.exec(token);
 
       if (codeBlock) {
