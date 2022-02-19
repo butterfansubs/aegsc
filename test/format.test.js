@@ -1,5 +1,10 @@
 const assert = require('assert/strict');
-const { formatEvent, minifyLua, minifyTemplate } = require('../src/format');
+const {
+  formatEvent,
+  minifyASSText,
+  minifyLua,
+  minifyTemplate,
+} = require('../src/format');
 
 describe('formatEvent', function() {
   it('should output a formatted ASS Comment event', function() {
@@ -58,6 +63,19 @@ describe('minifyLua', function() {
     const expected = String.raw`function pos()return([[\pos(%d,%d)]]):format($x,$y)end`;
 
     const actual = minifyLua(input);
+
+    assert.equal(actual, expected);
+  });
+});
+
+describe('minifyASSText', function() {
+  it('should replace newlines with spaces outside override blocks', function() {
+    const input = String.raw`a
+b
+c`;
+    const expected = 'a b c';
+
+    const actual = minifyASSText(input);
 
     assert.equal(actual, expected);
   });

@@ -34,6 +34,10 @@ function minifyLua(code) {
   return minified.replaceAll(dollar, '$');
 }
 
+function minifyASSText(ass) {
+  return ass.replaceAll('\n', ' ');
+}
+
 function minifyTemplate(template) {
   return template
     .split(/(![^!]*!)/)
@@ -55,6 +59,7 @@ function minifyTemplate(template) {
 
 module.exports = {
   formatEvent,
+  minifyASSText,
   minifyLua,
   minifyTemplate,
 };
