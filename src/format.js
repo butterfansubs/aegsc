@@ -36,8 +36,20 @@ function minifyLua(code) {
 
 function minifyTemplate(template) {
   return template
-    .split('\n')
-    .map((line) => line.trim())
+    .split(/(![^!]*!)/)
+    .flatMap((token) =>{
+      const codeBlock = /^!(.*)!$/s.exec(token);
+
+      if (codeBlock) {
+        const [, code] = codeBlock;
+        const minified = minifyLua(`return (${code})`).replace(/return ?/, '');
+        return `!${minified}!`;
+      } else {
+        return token
+          .split('\n')
+          .map((line) => line.trim());
+      }
+    })
     .join('');
 }
 

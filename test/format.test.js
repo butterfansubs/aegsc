@@ -88,4 +88,48 @@ describe('minifyTemplate', function() {
 
     assert.equal(actual, expected);
   });
+
+  it('should minify embeded Lua', function() {
+    const input = String.raw`
+    {
+      \pos(
+        !$x + 50!,
+        !$y + 50!
+      )
+      !1 -- comment
+        and "\\c&HFFFFFF&"
+        or "\\c&H000000&"
+      !
+      !"\\fnImpact"!
+    }`;
+    const expected = String.raw`{\pos(!$x+50!,!$y+50!)!1 and"\\c&HFFFFFF&"or"\\c&H000000&"!!"\\fnImpact"!}`;
+
+    const actual = minifyTemplate(input);
+
+    assert.equal(actual, expected);
+  });
+
+  it('should preserve string newlines in embedded Lua', function() {
+    // This case probably has no practical use, but it's required to ensure that
+    // the meaning of the minified code has not changed.
+
+    const input = String.raw`
+    {
+      !1
+        and [[
+\\c&HFFFFFF&
+\\3c&HFFFFFF&
+]]
+        or "\\c&H000000&"
+      !
+    }`;
+    const expected = String.raw`{!1 and[[
+\\c&HFFFFFF&
+\\3c&HFFFFFF&
+]]or"\\c&H000000&"!}`;
+
+    const actual = minifyTemplate(input);
+
+    assert.equal(actual, expected);
+  });
 });
