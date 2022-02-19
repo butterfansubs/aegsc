@@ -103,4 +103,26 @@ describe('parseTemplateLine', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should allow the header to span multiple lines by escaping the newline', function() {
+    const input = String.raw`a \
+b c\
+       d\
+e \
+# actor $ style \
+@ 1
+text 1
+text 2`;
+    const expected = {
+      layer: '1',
+      actor: 'actor',
+      style: 'style',
+      effect: 'a b c d e',
+      text: 'text 1\ntext 2',
+    };
+
+    const actual = parseTemplateLine(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });

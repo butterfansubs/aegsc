@@ -14,10 +14,15 @@ const sigilMap = {
 function parseTemplateLine(templateLine) {
   const parsedTemplate = {};
 
-  const [header, ...text] = templateLine.split('\n');
+  const [header, ...text] = templateLine.split(/(?<!\\)\n/);
   parsedTemplate.text = text.join('\n').trim();
 
-  const [effect, ...headerTokens] = header.split(/(?<!\\)([@<>$#])/).map((token) => token.trim());
+  const [effect, ...headerTokens] = header
+    .split('\\\n')
+    .map((line) => line.trim())
+    .join(' ')
+    .split(/(?<!\\)([@<>$#])/)
+    .map((token) => token.trim());
   parsedTemplate.effect = effect;
 
   let tokens = headerTokens;
