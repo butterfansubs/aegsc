@@ -1,5 +1,5 @@
 const assert = require('assert/strict');
-const { extractTemplateBlocks, parseTemplateBlock } = require('../src/parse');
+const { extractTemplateBlocks, removeComments, parseTemplateBlock } = require('../src/parse');
 
 describe('extractTemplateBlocks', function() {
   it('should return empty for no input', function() {
@@ -52,6 +52,17 @@ Template 2
     const expected = ['a', 'b\n  c'];
 
     const actual = extractTemplateBlocks(input);
+
+    assert.deepEqual(actual, expected);
+  });
+});
+
+describe('removeComments', function() {
+  it('should remove lines containing only a comment optionally preceded by whitespace', function() {
+    const input = 'a b c\n%; comment\nd e f\n    %; comment\n    g h i';
+    const expected = `a b c\nd e f\n    g h i`;
+
+    const actual = removeComments(input);
 
     assert.deepEqual(actual, expected);
   });

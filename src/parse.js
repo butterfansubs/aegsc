@@ -3,6 +3,13 @@ function extractTemplateBlocks(text) {
     .map((block) => block.trim());
 }
 
+function removeComments(text) {
+  return text
+    .split('\n')
+    .filter((line) => !/^\s*%;/.test(line))
+    .join('\n');
+}
+
 const sigilMap = {
   '^': 'type',
   '@': 'layer',
@@ -45,5 +52,6 @@ function parseTemplateBlock(templateBlock) {
 
 module.exports = {
   extractTemplateBlocks,
+  removeComments,
   parseTemplateBlock,
 };
