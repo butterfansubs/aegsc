@@ -66,6 +66,15 @@ describe('removeComments', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should remove end-of-line comments', function() {
+    const input = 'a%; comment\n  b%;comment';
+    const expected = 'a\n  b';
+
+    const actual = removeComments(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
 
 describe('parseTemplateBlock', function() {
