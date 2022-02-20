@@ -36,12 +36,13 @@ function minifyLua(code) {
 
 function minifyASSText(ass) {
   return ass
-    .split(/(\{[^}]*\})/)
+    .split(/(\{[^}]*\}[^\S\n]*)/)
     .map((token) => (
       token
         .split('\n')
+        .filter((line, index) => index !== 0 || line.length) // removes newlines immediately after override blocks
         .map((line) => line.trimStart())
-        .join(/^\{.*\}$/s.test(token) ? '' : ' ')
+        .join(/^\{.*\}\s*$/s.test(token) ? '' : ' ')
     ))
     .join('');
 }

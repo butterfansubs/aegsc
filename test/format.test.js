@@ -87,6 +87,15 @@ describe('minifyASSText', function() {
     assert.equal(actual, expected);
   });
 
+  it('should remove newlines immediately after override blocks', function() {
+    const input = 'a\n{xyz}\nb\nc\n{uwv} \nd\n{lmn} e f\ng';
+    const expected = 'a {xyz}b c {uwv} d {lmn} e f g';
+
+    const actual = minifyASSText(input);
+
+    assert.equal(actual, expected);
+  });
+
   it('should trim leading whitespace in source lines', function() {
     const input = String.raw`{
       \fax3\fay4    
