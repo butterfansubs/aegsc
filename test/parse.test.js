@@ -75,6 +75,15 @@ describe('removeComments', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should remove a single whitespace character immediately before an end-of-line comment', function() {
+    const input = 'a %; comment\n  b  %;comment';
+    const expected = 'a\n  b ';
+
+    const actual = removeComments(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
 
 describe('parseTemplateBlock', function() {

@@ -7,7 +7,7 @@ function removeComments(text) {
   return text
     .split('\n')
     .filter((line) => !/^\s*%;/.test(line))
-    .map((line) => line.replace(/%;.*$/, ''))
+    .map((line) => line.replace(/\s?%;.*$/, ''))
     .join('\n');
 }
 
