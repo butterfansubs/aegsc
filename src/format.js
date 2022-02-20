@@ -37,7 +37,12 @@ function minifyLua(code) {
 function minifyASSText(ass) {
   return ass
     .split(/(\{[^}]*\})/)
-    .map((token) => token.replaceAll('\n', /^\{.*\}$/s.test(token) ? '' : ' '))
+    .map((token) => (
+      token
+        .split('\n')
+        .map((line) => line.trimStart())
+        .join(/^\{.*\}$/s.test(token) ? '' : ' ')
+    ))
     .join('');
 }
 

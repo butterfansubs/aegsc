@@ -86,6 +86,20 @@ describe('minifyASSText', function() {
 
     assert.equal(actual, expected);
   });
+
+  it('should trim leading whitespace in source lines', function() {
+    const input = String.raw`{
+      \fax3\fay4    
+    } 
+    a  
+    b
+    c    `;
+    const expected = String.raw`{\fax3\fay4    } a   b c    `;
+
+    const actual = minifyASSText(input);
+
+    assert.equal(actual, expected);
+  });
 });
 
 describe('minifyTemplate', function() {
