@@ -13,7 +13,11 @@ const {
 
 const processBlock = pipe(
   parseTemplateBlock,
-  ({ text, ...event }) => ({ ...event, text: minifyTemplate(text) }),
+  ({ effect, text, ...event }) => ({
+    ...event,
+    effect,
+    text: effect.startsWith('code') ? minifyLua(text) : minifyTemplate(text),
+  }),
   formatEvent
 );
 
