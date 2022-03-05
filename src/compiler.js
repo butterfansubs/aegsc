@@ -26,7 +26,7 @@ function compile(input) {
     removeComments,
     extractTemplateBlocks,
     (blocks) => blocks.map(processBlock),
-    (lines) => lines.join('')
+    (lines) => lines.join('\n')
   )(input);
 };
 
