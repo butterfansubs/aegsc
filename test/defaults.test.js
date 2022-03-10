@@ -47,4 +47,13 @@ describe('supplyDefaults', function() {
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should not modify the original object', function() {
+    const input = {};
+    const expected = {};
+
+    supplyDefaults(input);
+
+    assert.deepEqual(input, expected);
+  });
 });
