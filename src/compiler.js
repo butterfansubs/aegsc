@@ -10,9 +10,11 @@ const {
   minifyLua,
   minifyTemplate,
 } = require('./format');
+const { supplyDefaults } = require('./defaults');
 
 const processBlock = pipe(
   parseTemplateBlock,
+  supplyDefaults,
   ({ effect, text, ...event }) => ({
     ...event,
     effect,

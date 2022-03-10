@@ -122,4 +122,13 @@ Outside 3
 
     assert.equal(actual, expected);
   });
+
+  it('should supply defaults for missing header fields', function() {
+    const input = '%[%]';
+    const expected = 'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,';
+
+    const actual = compile(input);
+
+    assert.equal(actual, expected);
+  });
 });
