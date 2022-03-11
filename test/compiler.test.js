@@ -96,7 +96,7 @@ Outside 3
     ]]
   end
 %]
-%[ template syl ^ Dialog @ 30 < 6:78:90.123 > 7:89:01.234 $ Template2 # Actor4 =L 12 =R 22 =V 32
+%[ template syl ^ Dialogue @ 30 < 6:78:90.123 > 7:89:01.234 $ Template2 # Actor4 =L 12 =R 22 =V 32
   { %; Comment in override
     \pos(!
       $x
@@ -115,7 +115,7 @@ Outside 3
       String.raw`Comment: 1,0:12:34.567,1:23:45.678,Template1,Actor,10,20,30,template line,{\pos(!$x+10!,!$y+20!)\c&H000000&}Line:`,
       String.raw`Comment: 10,3:45:67.890,2:34:56.789,Code1,Actor2,10,20,30,code line,function xModYPlusZ(a,b)local c=5;return a%b+5 end`,
       String.raw`Comment: 20,4:56:78.999,5:67:89.000,Code2,Actor3,11,21,31,code once,function xModYPlusZ2(a,b)local c=5;return a%b+15 end`,
-      String.raw`Dialog: 30,6:78:90.123,7:89:01.234,Template2,Actor4,12,22,32,template syl,{\pos(!$x+20!,!$y+20!)\c&HFFFFFF&}Line:`,
+      String.raw`Dialogue: 30,6:78:90.123,7:89:01.234,Template2,Actor4,12,22,32,template syl,{\pos(!$x+20!,!$y+20!)\c&HFFFFFF&}Line:`,
     ].join('\n');
 
     const actual = compile(input);
