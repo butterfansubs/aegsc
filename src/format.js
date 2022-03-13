@@ -29,9 +29,9 @@ function formatEvent({
 
 function minifyLua(code) {
   const dollar = '____DOLLAR____';
-  const safeCode = code.replaceAll('$', dollar);
+  const safeCode = code.replace(/\$/g, dollar);
   const minified = luamin.minify(safeCode);
-  return minified.replaceAll(dollar, '$');
+  return minified.replace(new RegExp(dollar, 'g'), '$');
 }
 
 function minifyASSText(ass) {
