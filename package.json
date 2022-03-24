@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Compiler for .aegs files",
   "main": "src/index.js",
+  "bin": "bin/index.js",
   "exports": {
     "import": "./esm.mjs",
     "require": "./src/index.js"
