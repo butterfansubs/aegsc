@@ -1,4 +1,4 @@
-const assert = require('assert/strict');
+const assert = require('assert').strict;
 const { extractTemplateBlocks, removeComments, parseTemplateBlock } = require('../src/parse');
 
 describe('extractTemplateBlocks', function() {

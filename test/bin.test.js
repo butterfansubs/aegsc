@@ -1,4 +1,4 @@
-const assert = require('assert/strict');
+const assert = require('assert').strict;
 const { fork } = require('child_process');
 const fs = require('fs');
 const path = require('path');

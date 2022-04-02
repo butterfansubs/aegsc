@@ -1,4 +1,4 @@
-const assert = require('assert/strict');
+const assert = require('assert').strict;
 const { compile } = require('../src/compiler');
 
 describe('compile', function() {

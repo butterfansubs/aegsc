@@ -1,4 +1,4 @@
-const assert = require('assert/strict');
+const assert = require('assert').strict;
 const { supplyDefaults } = require('../src/defaults');
 
 describe('supplyDefaults', function() {
