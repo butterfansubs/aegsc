@@ -29,9 +29,9 @@ describe('extractTemplateBlocks', function() {
     assert.deepEqual(actual, expected);
   });
 
-  it('should extract a template block with newlines and trim whitespace', function() {
+  it('should extract a template block with newlines', function() {
     const input = `%[\na\n%]`;
-    const expected = ['a'];
+    const expected = ['\na\n'];
 
     const actual = extractTemplateBlocks(input);
 
@@ -49,7 +49,10 @@ Template 2
   c
 %]
     `;
-    const expected = ['a', 'b\n  c'];
+    const expected = [
+      '\n  a\n',
+      '\n  b\n  c\n',
+    ];
 
     const actual = extractTemplateBlocks(input);
 

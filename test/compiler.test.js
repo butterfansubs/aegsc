@@ -131,4 +131,13 @@ Outside 3
 
     assert.equal(actual, expected);
   });
+
+  it('should compile with empty headers', function() {
+    const input = '%[\n{}%]';
+    const expected = 'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,{}';
+
+    const actual = compile(input);
+
+    assert.equal(actual, expected);
+  });
 });

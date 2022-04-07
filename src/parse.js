@@ -1,6 +1,6 @@
 function extractTemplateBlocks(text) {
   return Array.from(text.matchAll(/%\[((?:[^%]|%[^\]])*)%\]/gs) ?? [])
-    .map(([, block]) => block.trim())
+    .map(([, block]) => block);
 }
 
 function removeComments(text) {
