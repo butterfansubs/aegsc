@@ -69,27 +69,9 @@ describe('minifyLua', function() {
 });
 
 describe('minifyASSText', function() {
-  it('should replace newlines with spaces outside override blocks', function() {
-    const input = `a\nb\nc`;
-    const expected = 'a b c';
-
-    const actual = minifyASSText(input);
-
-    assert.equal(actual, expected);
-  });
-
   it('should remove newlines inside override blocks', function() {
-    const input = '{\na\nb\nc\n}';
-    const expected = '{abc}';
-
-    const actual = minifyASSText(input);
-
-    assert.equal(actual, expected);
-  });
-
-  it('should remove newlines immediately after override blocks', function() {
-    const input = 'a\n{xyz}\nb\nc\n{uwv} \nd\n{lmn} e f\ng';
-    const expected = 'a {xyz}b c {uwv} d {lmn} e f g';
+    const input = '{\na\nb\nc\n}\nd\ne';
+    const expected = '{abc}de';
 
     const actual = minifyASSText(input);
 
@@ -103,7 +85,7 @@ describe('minifyASSText', function() {
     a  
     b
     c    `;
-    const expected = String.raw`{\fax3\fay4    } a   b c    `;
+    const expected = String.raw`{\fax3\fay4    } a  bc    `;
 
     const actual = minifyASSText(input);
 
