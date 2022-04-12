@@ -51,4 +51,28 @@ describe('bin', function() {
     assert.equal(exitCode, 0);
     assert.equal(output, fs.readFileSync(path.resolve(__dirname, './fixtures/multiple.out'), 'utf-8'));
   });
+
+  it('should compile format-tutorial and return success', async function() {
+    const inputStream = fs.createReadStream(path.resolve(__dirname, './fixtures/format-tutorial.aegs'));
+    proc = runAegsc();
+    inputStream.pipe(proc.stdin);
+
+    const output = await stdout(proc);
+    const exitCode = proc.exitCode;
+
+    assert.equal(exitCode, 0);
+    assert.equal(output, fs.readFileSync(path.resolve(__dirname, './fixtures/format-tutorial.out'), 'utf-8'));
+  });
+
+  it('should compile real-world-example and return success', async function() {
+    const inputStream = fs.createReadStream(path.resolve(__dirname, './fixtures/real-world-example.aegs'));
+    proc = runAegsc();
+    inputStream.pipe(proc.stdin);
+
+    const output = await stdout(proc);
+    const exitCode = proc.exitCode;
+
+    assert.equal(exitCode, 0);
+    assert.equal(output, fs.readFileSync(path.resolve(__dirname, './fixtures/real-world-example.out'), 'utf-8'));
+  });
 });

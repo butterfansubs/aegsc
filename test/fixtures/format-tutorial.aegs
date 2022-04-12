@@ -1,0 +1,266 @@
+This is a walkthrough of the aegs format used by aegsc.
+
+This file is a valid aegs file. The expected output can be found in
+`format-tutorial.out`. Throughout this walkthrough, line markers of
+the form (L#) will appear---where # is a number---that indicate
+the line number in the output file for the expected output of the block
+that follows.
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; COMMENTS
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Comments start with `%;` and continue until the end of the line. They
+are removed from the file before any further processing is done. Lines
+containing only a comment and optional leading whitespace are removed
+completely. If a comment is immediately preceded by a single whitespace
+character, the whitespace character is also removed.
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; BLOCKS
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+%; The fundamental unit in an aegs file is the block.
+%; Each block becomes an ASS event line in the compiled output.
+%; Blocks start with `%[` and end on the next `%]` and may not be nested.
+
+Comments are removed before blocks are parsed, so any block delimiters
+inside comments are ignored and will not generate a block,
+hence the comment markers above.
+
+Any text outside of blocks is also ignored. This allows one to document
+blocks in a literate way, like this file does.
+
+The following is an example of a simple block (L1):
+
+%[ template syl
+  {
+    \pos($x,$y)
+  }
+%]
+
+A block consists of two parts: the header, and the body. The first line
+is the header, which contains the block's metadata. The rest is the body,
+which contains the block's content.
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; BLOCK HEADERS
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+The block header can contain a number of fields that map to ASS event
+fields. A block with a full header might look like the following (L2):
+
+%[ template syl ^ Comment # Singer A @ 1 < 0:02:00.00 > 0:04:00.00 $ OP-R =L 10 =R 50 =V 20
+  {
+    \pos($x,$y)
+  }
+%]
+
+The first field maps to the Effect field and may be empty.
+The rest are prefixed by the following characters:
+
+    ^    Type (i.e. Comment/Dialogue)
+    #    Actor
+    @    Layer
+    <    Start time
+    >    End time
+    $    Style
+    =L   Margin L
+    =R   Margin R
+    =V   Margin V
+
+They may appear in any order and each of them may be omitted.
+If omitted, the following defaults will be supplied:
+
+    ^    Comment
+    #    "" (empty)
+    @    0
+    <    0:00:00.00
+    >    0:00:00.00
+    $    Default
+    =L   0
+    =R   0
+    =V   0
+
+The defaults can be seen in the output for the empty block (L3): %[%]
+
+Values that appear after these prefixes are trimmed of leading and
+trailing whitespace. It is not necessary to pad the prefixes with
+whitespace, although it is recommended for readability.
+
+If a prefix character appears as part of the value for one of the fields,
+it must be escaped by a backslash. For example, to set the Style field
+to `1$OP` and the Actor field to `JP>EN` where `$` and `>` are special
+prefixes (L4):
+
+%[ template syl $ 1\$OP # JP\>EN
+  {
+    \pos($x,$y)
+  }
+%]
+
+The block header can be split onto multiple lines by adding a backslash
+at the end of the line (L5):
+
+%[ template syl \
+   fxgroup auto \
+   # Singer A $ OP-R @ 1 \
+   < 0:02:00.00 > 0:04:00.00
+  {
+    \pos($x,$y)
+  }
+%]
+
+During processing, the backslash is removed, each line in the header is
+trimmed of its leading and trailing whitespace, then lines are joined
+with a single space. Prefix parsing follows after.
+
+As demonstrated below (L6), comments can be added after the backslash
+as long as only a single whitespace is used immediately before the
+comment marker. A line containing only (optional) whitespace and a
+comment can added between header lines. These are consequences of how
+comments are processed.
+
+%[ template syl \ %; This is a comment after a backslash
+   fxgroup auto \
+   %; This is a comment in between header lines
+   # Singer A $ OP-R @ 1 \
+   < 0:02:00.00 > 0:04:00.00
+   %; End header
+  {
+    \pos($x,$y)
+  }
+%]
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; BLOCK TEXT
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Following the header until the block end marker is the block text.
+
+The text is mostly free-form and may contain newlines (L7):
+
+%[ template syl
+  {
+    \pos($x,$y)
+  }
+%]
+
+The block text may be empty (L8):
+
+%[ template syl %]
+
+It is subject to minification, the specifics of which depend on the
+value of the Effect field in the header.
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; BLOCK TEXT: CODE
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+For Effect field values that start with `code`, the text is treated
+as Lua and is run through a Lua minifier. This allows the use of standard
+coding practices such as using newlines, indentation, and descriptive
+variable names (L9):
+
+%[ code once
+  function update_bpm()
+    local new_bpm = line.actor:match("bpm=(%d+)")
+
+    if new_bpm then
+      bpm = new_bpm
+      update_fade_dur()
+    end
+  end 
+%]
+
+Lua comments will be removed during minification (L10):
+
+%[ code once
+  --[[
+    This function recognizes directives of the form "bpm=123" in the
+    Actor field. It will update the global bpm value to the number after
+    the = sign.
+  ]]
+  function update_bpm()
+    -- Names of local variables will be mangled during minification,
+    -- but the function will still work the same.
+    local new_bpm = line.actor:match("bpm=(%d+)")
+
+    if new_bpm then
+      -- Names of global variables will remain untouched.
+      bpm = new_bpm
+      update_fade_dur()
+    end
+  end 
+%]
+
+Aegs comments may also be used as normal.
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; BLOCK TEXT: TEMPLATE
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+If the Effect field does not start with `code`, the block text
+is treated as an ASS auto4 karaoke template.
+
+The template text may contain inline code segments. An inline code
+segment starts on a `!` character and ends on the next `!` character,
+which may be on separate lines. Inline code is minified using a Lua
+minifier with special handling for dollar variables. The following block
+is an example that uses inline code (L11):
+
+%[ template line
+  !relayer(5)!
+  ! -- A code segment can span multiple lines
+    -- and even include Lua comments.
+    retime(
+      "line",
+      -500,
+      0
+    )
+  !
+  {
+    \pos(!$x - 5!,!$y - 5!)
+  }
+%]
+
+Outside of inline code segments, newlines and leading whitespace are
+removed. Trailing whitespace is not removed, allowing lines to be
+joined by spaces by adding a trailing space. Example (L12):
+
+%[ template line notext
+  {
+    \pos($x,$y)
+    \c&HFFFFFF&
+    \t(
+      0,
+      100,
+      \c&H000000&
+    )
+    \clip(
+      %; A trailing space is required after each of these lines
+      %; because the ASS format requires whitespace between drawing
+      %; commands and values. If using a comment marker to make
+      %; the trailing whitespace more clear, ensure that there are
+      %; at least two spaces before the comment marker because the space
+      %; immediately before the marker is absorbed by the comment.
+      m 0 0  %;
+      l 1920 0  %;
+        1920 1080  %;
+        0 1080
+    )
+  }
+  m    0    0  %; Internal spaces are not compressed at this time,
+  l 1920    0  %; but that may change in a future version.
+    1920 1080  %;
+       0 1080
+%]
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+This concludes the walkthrough of the aegs format used by aegsc.
+Once again, the expected output of this file can be found in
+`format-tutorial.out`.
+
+Acknowledgements go to DCTewi for developing the original aegs format
+upon which the aegs format used by aegsc is based.

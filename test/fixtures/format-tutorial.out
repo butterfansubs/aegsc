@@ -1,0 +1,12 @@
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template syl,{\pos($x,$y)}
+Comment: 1,0:02:00.00,0:04:00.00,OP-R,Singer A,10,50,20,template syl,{\pos($x,$y)}
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,
+Comment: 0,0:00:00.00,0:00:00.00,1$OP,JP>EN,0,0,0,template syl,{\pos($x,$y)}
+Comment: 1,0:02:00.00,0:04:00.00,OP-R,Singer A,0,0,0,template syl fxgroup auto,{\pos($x,$y)}
+Comment: 1,0:02:00.00,0:04:00.00,OP-R,Singer A,0,0,0,template syl fxgroup auto,{\pos($x,$y)}
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template syl,{\pos($x,$y)}
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template syl,
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,code once,function update_bpm()local a=line.actor:match("bpm=(%d+)")if a then bpm=a;update_fade_dur()end end
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,code once,function update_bpm()local a=line.actor:match("bpm=(%d+)")if a then bpm=a;update_fade_dur()end end
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template line,!relayer(5)!!retime("line",-500,0)!{\pos(!$x-5!,!$y-5!)}
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template line notext,{\pos($x,$y)\c&HFFFFFF&\t(0,100,\c&H000000&)\clip(m 0 0 l 1920 0 1920 1080 0 1080)}m    0    0 l 1920    0 1920 1080 0 1080

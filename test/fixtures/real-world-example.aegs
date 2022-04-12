@@ -1,0 +1,97 @@
+This is a simple real-world example based on the karaoke template
+by The0x539 for the ED of the LostYears release of Fire Force Season 2.
+
+This template is intended for The0x539's templater: https://github.com/The0x539/Aegisub-Scripts
+
+%[ code once $ ED3-R \
+   < 0:22:37.83 > 0:23:56.99
+  function ease()
+    retime('line', -360, 120)
+
+    return string.format(
+      [[\xshad%d\t(0,240,4,\xshad%d)\t(240,480,0.25,\xshad0)\t(%d,%d,4,\xshad%d)\t(%d,%d,0.25,\xshad%d)]],
+      meta.res_x,
+      meta.res_x / 2,
+      line.duration - 480,
+      line.duration - 240,
+      -meta.res_x / 2,
+      line.duration - 240,
+      line.duration,
+      -meta.res_x
+    )
+  end
+%]
+
+%[ code once $ ED3-R \
+   < 0:22:37.83 > 0:23:56.99
+  function color(c)
+    return string.format([[\1a&HFE&\3a&HFE&\4a&H00&\1c&H%s&\3c&H%s&\4c&H%s&]], c, c, c);
+  end
+%]
+
+%[ code once $ ED3-R \
+   < 0:22:37.83 > 0:23:56.99
+  function relative_t(a1, a2, a3, a4)
+    local delta = line.start_time - orgline.start_time
+    a1 = a1 - delta
+    a2 = a2 - delta
+    return ln.tag.t(a1, a2, a3, a4)
+  end
+%]
+
+%[ template line anystyle $ ED3-R @ 3 \
+   < 0:22:37.83 > 0:23:56.99
+  {
+    !color('090812')!
+  }
+%]
+
+%[ template line anystyle $ ED3-R @ 2 \
+   < 0:22:37.83 > 0:23:56.99
+  {
+    !color('FBFCFA')!
+    \bord3
+  }
+%]
+
+%[ template line $ ED3-R @ 1 \
+   # highlight \
+   < 0:22:37.83 > 0:23:56.99
+  {
+    !color('FBFCFA')!
+    \bord7
+    \blur5
+  }
+%]
+
+%[ mixin line anystyle $ ED3-R \
+   < 0:22:37.83 > 0:23:56.99
+  {
+    \yshad0.01
+    \q2
+    !ease()!
+    !ln.line.tag{'fscx', 'fsp'}!
+  }
+%]
+
+%[ mixin syl \
+   noblank \
+   t_actor highlight \
+   $ ED3-R \
+   < 0:22:37.83 > 0:23:56.99
+  {
+    \4a&HFF&
+    !relative_t(
+      syl.start_time - 120,
+      syl.start_time + 120,
+      0.5,
+      [[\4a&H00&]]
+    )!
+    !relative_t(
+      syl.end_time - 120,
+      syl.end_time + 120,
+      2,
+      [[\4a&HFF&]]
+    )!
+  }
+%]

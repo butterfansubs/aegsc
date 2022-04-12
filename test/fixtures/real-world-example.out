@@ -1,0 +1,8 @@
+Comment: 0,0:22:37.83,0:23:56.99,ED3-R,,0,0,0,code once,function ease()retime('line',-360,120)return string.format([[\xshad%d\t(0,240,4,\xshad%d)\t(240,480,0.25,\xshad0)\t(%d,%d,4,\xshad%d)\t(%d,%d,0.25,\xshad%d)]],meta.res_x,meta.res_x/2,line.duration-480,line.duration-240,-meta.res_x/2,line.duration-240,line.duration,-meta.res_x)end
+Comment: 0,0:22:37.83,0:23:56.99,ED3-R,,0,0,0,code once,function color(a)return string.format([[\1a&HFE&\3a&HFE&\4a&H00&\1c&H%s&\3c&H%s&\4c&H%s&]],a,a,a)end
+Comment: 0,0:22:37.83,0:23:56.99,ED3-R,,0,0,0,code once,function relative_t(a,b,c,d)local e=line.start_time-orgline.start_time;a=a-e;b=b-e;return ln.tag.t(a,b,c,d)end
+Comment: 3,0:22:37.83,0:23:56.99,ED3-R,,0,0,0,template line anystyle,{!color('090812')!}
+Comment: 2,0:22:37.83,0:23:56.99,ED3-R,,0,0,0,template line anystyle,{!color('FBFCFA')!\bord3}
+Comment: 1,0:22:37.83,0:23:56.99,ED3-R,highlight,0,0,0,template line,{!color('FBFCFA')!\bord7\blur5}
+Comment: 0,0:22:37.83,0:23:56.99,ED3-R,,0,0,0,mixin line anystyle,{\yshad0.01\q2!ease()!!ln.line.tag{'fscx','fsp'}!}
+Comment: 0,0:22:37.83,0:23:56.99,ED3-R,,0,0,0,mixin syl noblank t_actor highlight,{\4a&HFF&!relative_t(syl.start_time-120,syl.start_time+120,0.5,[[\4a&H00&]])!!relative_t(syl.end_time-120,syl.end_time+120,2,[[\4a&HFF&]])!}
