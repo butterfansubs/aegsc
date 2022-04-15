@@ -74,3 +74,10 @@ Major extensions to DCTewi's original format include (but are not limited to):
 - comments
 - full customizability of ASS event fields
 - proper Lua minification
+
+## License
+
+This project is licensed under the MIT license.
+See the [LICENSE][] file for details.
+
+[LICENSE]: ./LICENSE
