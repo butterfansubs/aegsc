@@ -26,6 +26,8 @@ To install the library as a dependency in a Node project:
 npm install --save github:butterfansubs/aegsc
 ```
 
+Node 14 or higher is supported.
+
 ## Usage
 
 ### Command Line
