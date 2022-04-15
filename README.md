@@ -15,6 +15,11 @@ To install the command line utility:
 npm install --global github:butterfansubs/aegsc
 ```
 
+If you do not wish to install Node separately, binaries with a Node runtime bundled are available on the [Releases page][releases].
+These can be run directly with no installation necessary.
+
+[releases]: https://github.com/butterfansubs/aegsc/releases
+
 To install the library as a dependency in a Node project:
 
 ```sh
