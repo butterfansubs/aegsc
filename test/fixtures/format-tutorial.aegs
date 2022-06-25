@@ -200,7 +200,7 @@ Aegs comments may also be used as normal.
 %; BLOCK TEXT: TEMPLATE
 %;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-If the Effect field does not start with `code`, the block text
+If the Effect field starts with `template` or `mixin`, the block text
 is treated as an ASS auto4 karaoke template.
 
 The template text may contain inline code segments. An inline code
@@ -254,6 +254,59 @@ joined by spaces by adding a trailing space. Example (L12):
   l 1920    0  %; but that may change in a future version.
     1920 1080  %;
        0 1080
+%]
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; BLOCK TEXT: ASS
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+If the Effect field starts with any other value, the block text is
+treated as ASS text.
+
+The text is processed the same as an auto4 karaoke template except
+without special treatment of text delimited by exclamation marks.
+That is, the only minification that occurs is the removal of newlines
+and leading spaces.
+
+An example with `karaoke` in the Effect field (L13):
+
+%[ karaoke
+  {\k30}Yay!  %;
+  {\k30}Yay!  %;
+  {\k60}Yay!
+%]
+
+Another example with an empty Effect field (L14):
+
+%[
+  {
+    \pos(0,0)
+    \an7
+    \p1
+  }
+  m    0    0  %; Same thing applies as before about internal spaces
+  l 1920    0  %;
+    1920 1080  %;
+       0 1080
+%]
+
+Taking a previous example, notice how text inside exclamation marks
+are not treated specially (L14):
+
+%[
+  !relayer(5)!
+  ! -- This is not a code segment
+    -- and this is not a Lua comment
+    retime(
+      "line",
+      -500,
+      0
+    )
+  !
+  {
+    \pos(!$x - 5!,!$y - 5!)
+  }
+  !invalid lua!
 %]
 
 %;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

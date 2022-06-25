@@ -12,14 +12,25 @@ const {
 } = require('./format');
 const { supplyDefaults } = require('./defaults');
 
+const minifier = {
+  code: minifyLua,
+  template: minifyTemplate,
+  mixin: minifyTemplate,
+};
+
 const processBlock = pipe(
   parseTemplateBlock,
   supplyDefaults,
-  ({ effect, text, ...event }) => ({
-    ...event,
-    effect,
-    text: effect.startsWith('code') ? minifyLua(text) : minifyTemplate(text),
-  }),
+  ({ effect, text, ...event }) => {
+    const type = effect.split(/\s/)[0];
+    const minify = minifier[type] ?? minifyASSText;
+
+    return {
+      ...event,
+      effect,
+      text: minify(text)
+    };
+  },
   formatEvent
 );
 
