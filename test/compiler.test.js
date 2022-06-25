@@ -140,4 +140,50 @@ Outside 3
 
     assert.equal(actual, expected);
   });
+
+  it('should differentiate between code, template, and regular blocks', function() {
+    const input = `
+%[ code once
+  function a(arg)
+    return arg
+  end
+%]
+%[ template line
+  {
+    !arg($x + 2)!
+  }
+  !arg()!
+%]
+%[ mixin line
+  {
+    !arg($x + 2)!
+  }
+  !arg()!
+%]
+%[ karaoke
+  {
+    !arg($x + 2)!
+  }
+  !arg()!
+  !invalid lua!
+%]
+%[
+  {
+    !arg($x + 2)!
+  }
+  !arg()!
+  !invalid lua!
+%]`;
+    const expected = [
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,code once,function a(b)return b end',
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template line,{!arg($x+2)!}!arg()!',
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,mixin line,{!arg($x+2)!}!arg()!',
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,karaoke,{!arg($x + 2)!}!arg()!!invalid lua!',
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,{!arg($x + 2)!}!arg()!!invalid lua!',
+    ].join('\n')
+
+    const actual = compile(input);
+
+    assert.equal(actual, expected);
+  });
 });
