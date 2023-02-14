@@ -9,10 +9,11 @@ const {
   minifyLua,
   minifyTemplate,
 } = require('./format');
-const { supplyDefaults } = require('./defaults');
+const { AssDefaults } = require('./defaults');
 const { compile } = require('./compiler');
 
 module.exports = {
+  AssDefaults,
   compile,
   extractTemplateBlocks,
   formatEvent,

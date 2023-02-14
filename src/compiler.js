@@ -10,7 +10,7 @@ const {
   minifyLua,
   minifyTemplate,
 } = require('./format');
-const { supplyDefaults } = require('./defaults');
+const { AssDefaults } = require('./defaults');
 
 const minifier = {
   code: minifyLua,
@@ -18,27 +18,31 @@ const minifier = {
   mixin: minifyTemplate,
 };
 
-const processBlock = pipe(
-  parseTemplateBlock,
-  supplyDefaults,
-  ({ effect, text, ...event }) => {
-    const type = effect.split(/\s/)[0];
-    const minify = minifier[type] ?? minifyASSText;
+function processBlock(defaults) {
+  return pipe(
+    parseTemplateBlock,
+    defaults.supplyDefaults,
+    ({ effect, text, ...event }) => {
+      const type = effect.split(/\s/)[0];
+      const minify = minifier[type] ?? minifyASSText;
 
-    return {
-      ...event,
-      effect,
-      text: minify(text)
-    };
-  },
-  formatEvent
-);
+      return {
+        ...event,
+        effect,
+        text: minify(text)
+      };
+    },
+    formatEvent
+  )
+}
 
 function compile(input) {
+  const defaults = new AssDefaults();
+
   return pipe(
     removeComments,
     extractTemplateBlocks,
-    (blocks) => blocks.map(processBlock),
+    (blocks) => blocks.map(processBlock(defaults)),
     (lines) => lines.join('\n')
   )(input);
 };
