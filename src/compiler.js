@@ -18,10 +18,13 @@ const minifier = {
   mixin: minifyTemplate,
 };
 
-function processBlock(defaults) {
-  return pipe(
-    parseTemplateBlock,
-    defaults.supplyDefaults,
+const processor = Object.assign(Object.create(null), {
+  'set-defaults': (defaults) => (block) => {
+    defaults.setDefaults(block);
+    return [];
+  },
+  'karatemplate': (defaults) => pipe(
+    defaults.supplyDefaults.bind(defaults),
     ({ effect, text, ...event }) => {
       const type = effect.split(/\s/)[0];
       const minify = minifier[type] ?? minifyASSText;
@@ -33,7 +36,15 @@ function processBlock(defaults) {
       };
     },
     formatEvent
-  )
+  ),
+});
+
+function processBlock(defaults) {
+  return (...args) => {
+    const { _directive = 'karatemplate', ...block } = parseTemplateBlock(...args);
+    const process = processor[_directive] ?? (() => () => []);
+    return process(defaults)(block);
+  };
 }
 
 function compile(input) {
@@ -42,7 +53,7 @@ function compile(input) {
   return pipe(
     removeComments,
     extractTemplateBlocks,
-    (blocks) => blocks.map(processBlock(defaults)),
+    (blocks) => blocks.flatMap(processBlock(defaults)),
     (lines) => lines.join('\n')
   )(input);
 };

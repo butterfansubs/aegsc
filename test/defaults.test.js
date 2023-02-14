@@ -2,13 +2,13 @@ const assert = require('assert').strict;
 const { AssDefaults } = require('../src/defaults');
 
 describe('AssDefaults', function() {
+  let instance;
+
+  beforeEach(function() {
+    instance = new AssDefaults();
+  });
+
   describe('.supplyDefaults', function() {
-    let instance;
-
-    beforeEach(function() {
-      instance = new AssDefaults();
-    });
-
     it('should return defaults when no arguments are provided', function() {
       const expected = {
         type: 'Comment',
@@ -62,6 +62,78 @@ describe('AssDefaults', function() {
       instance.supplyDefaults(input);
 
       assert.deepEqual(input, expected);
+    });
+  });
+
+  describe('.setDefaults', function() {
+    it('should set the defaults for supplyDefaults', function() {
+      const input = {
+        type: 'Dialogue',
+        layer: '1',
+        startTime: '0:12:34.56',
+        endTime: '1:23:45.67',
+        style: 'romaji',
+        actor: 'comment',
+        marginL: '97',
+        marginR: '98',
+        marginV: '99',
+        effect: 'template syl',
+        text: '{\n    \\pos($sx, $sy)\n}',
+      };
+      const expected = {
+        type: 'Dialogue',
+        layer: '1',
+        startTime: '0:12:34.56',
+        endTime: '1:23:45.67',
+        style: 'romaji',
+        actor: 'comment',
+        marginL: '97',
+        marginR: '98',
+        marginV: '99',
+        effect: 'template syl',
+        text: '{\n    \\pos($sx, $sy)\n}',
+      };
+
+      instance.setDefaults(input);
+      const actual = instance.supplyDefaults({});
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should use the existing defaults for any missing fields', function() {
+      const oldDefaults = {
+        type: 'Dialogue',
+        layer: '1',
+        startTime: '0:12:34.56',
+        endTime: '1:23:45.67',
+        style: 'romaji',
+        actor: 'comment',
+        marginL: '97',
+        marginR: '98',
+        marginV: '99',
+        effect: 'template syl',
+        text: '{\n    \\pos($sx, $sy)\n}',
+      };
+      const newDefaults = {};
+      const expected = {
+        type: 'Dialogue',
+        layer: '1',
+        startTime: '0:12:34.56',
+        endTime: '1:23:45.67',
+        style: 'romaji',
+        actor: 'comment',
+        marginL: '97',
+        marginR: '98',
+        marginV: '99',
+        effect: 'template syl',
+        text: '{\n    \\pos($sx, $sy)\n}',
+      };
+
+      instance.setDefaults(oldDefaults);
+      instance.setDefaults(newDefaults);
+      const actual = instance.supplyDefaults({});
+
+      assert.deepEqual(actual, expected);
     });
   });
 });
