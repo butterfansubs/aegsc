@@ -161,4 +161,35 @@ text 2`;
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should recognize directives', function() {
+    const input = String.raw`!set-defaults, template # comment
+text
+`;
+    const expected = {
+      _directive: 'set-defaults',
+      effect: 'template',
+      actor: 'comment',
+      text: 'text',
+    };
+
+    const actual = parseTemplateBlock(input);
+
+    assert.deepEqual(actual, expected);
+  });
+
+  it('should not recognize malformed directives', function() {
+    const input = String.raw`!set-defaults template # comment
+te,xt
+`;
+    const expected = {
+      effect: '!set-defaults template',
+      actor: 'comment',
+      text: 'te,xt',
+    };
+
+    const actual = parseTemplateBlock(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
