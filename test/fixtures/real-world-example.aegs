@@ -3,8 +3,9 @@ by The0x539 for the ED of the LostYears release of Fire Force Season 2.
 
 This template is intended for The0x539's templater: https://github.com/The0x539/Aegisub-Scripts
 
-%[ code once $ ED3-R \
-   < 0:22:37.83 > 0:23:56.99
+%[!set-defaults, $ ED3-R < 0:22:37.83 > 0:23:56.99 %]
+
+%[ code once
   function ease()
     retime('line', -360, 120)
 
@@ -22,15 +23,13 @@ This template is intended for The0x539's templater: https://github.com/The0x539/
   end
 %]
 
-%[ code once $ ED3-R \
-   < 0:22:37.83 > 0:23:56.99
+%[ code once
   function color(c)
     return string.format([[\1a&HFE&\3a&HFE&\4a&H00&\1c&H%s&\3c&H%s&\4c&H%s&]], c, c, c);
   end
 %]
 
-%[ code once $ ED3-R \
-   < 0:22:37.83 > 0:23:56.99
+%[ code once
   function relative_t(a1, a2, a3, a4)
     local delta = line.start_time - orgline.start_time
     a1 = a1 - delta
@@ -39,24 +38,20 @@ This template is intended for The0x539's templater: https://github.com/The0x539/
   end
 %]
 
-%[ template line anystyle $ ED3-R @ 3 \
-   < 0:22:37.83 > 0:23:56.99
+%[ template line anystyle @ 3
   {
     !color('090812')!
   }
 %]
 
-%[ template line anystyle $ ED3-R @ 2 \
-   < 0:22:37.83 > 0:23:56.99
+%[ template line anystyle @ 2
   {
     !color('FBFCFA')!
     \bord3
   }
 %]
 
-%[ template line $ ED3-R @ 1 \
-   # highlight \
-   < 0:22:37.83 > 0:23:56.99
+%[ template line @ 1 # highlight
   {
     !color('FBFCFA')!
     \bord7
@@ -76,9 +71,7 @@ This template is intended for The0x539's templater: https://github.com/The0x539/
 
 %[ mixin syl \
    noblank \
-   t_actor highlight \
-   $ ED3-R \
-   < 0:22:37.83 > 0:23:56.99
+   t_actor highlight
   {
     \4a&HFF&
     !relative_t(
