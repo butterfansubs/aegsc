@@ -186,4 +186,40 @@ Outside 3
 
     assert.equal(actual, expected);
   });
+
+  it('should process set-defaults directives', function() {
+    const input = `
+%[%]
+%[!set-defaults, ^ Dialogue @ 1 < 0:12:34.56 > 1:23:45.67 $ Alternate # Actor =L 10 =R 20 =V 30 %]
+%[ template line @ 2
+  text
+%]
+%[%]
+`;
+    const expected = [
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,',
+      'Dialogue: 2,0:12:34.56,1:23:45.67,Alternate,Actor,10,20,30,template line,text',
+      'Dialogue: 1,0:12:34.56,1:23:45.67,Alternate,Actor,10,20,30,,',
+    ].join('\n');
+
+    const actual = compile(input);
+
+    assert.equal(actual, expected);
+  });
+
+  it('should ignore unknown directives', function() {
+    const input = `
+%[%]
+%[!unknown-directive, this should be ignored %]
+%[%]
+`;
+    const expected = [
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,',
+      'Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,',
+    ].join('\n');
+
+    const actual = compile(input);
+
+    assert.equal(actual, expected);
+  });
 });

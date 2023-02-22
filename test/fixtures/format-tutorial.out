@@ -13,3 +13,8 @@ Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template line notext,{\pos($x,$y
 Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,karaoke,{\k30}Yay! {\k30}Yay! {\k60}Yay!
 Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,{\pos(0,0)\an7\p1}m    0    0 l 1920    0 1920 1080 0 1080
 Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,!relayer(5)!! -- This is not a code segment-- and this is not a Lua commentretime("line",-500,0)!{\pos(!$x - 5!,!$y - 5!)}!invalid lua!
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,template syl,{\pos($x,$y)}
+Dialogue: 1,0:02:00.00,0:04:00.00,OP-R,Singer A,10,50,20,template syl,{\pos($x,$y)}
+Dialogue: 0,0:02:00.00,0:04:00.00,ED,Singer A,10,50,20,template syl,{\pos($x,$y)}
+Dialogue: 1,1:00:00.00,2:00:00.00,OP-R,Singer B,10,50,20,,
+Comment: 0,0:00:00.00,0:00:00.00,Default,,0,0,0,,

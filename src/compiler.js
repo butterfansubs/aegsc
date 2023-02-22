@@ -10,7 +10,7 @@ const {
   minifyLua,
   minifyTemplate,
 } = require('./format');
-const { supplyDefaults } = require('./defaults');
+const { AssDefaults } = require('./defaults');
 
 const minifier = {
   code: minifyLua,
@@ -18,27 +18,42 @@ const minifier = {
   mixin: minifyTemplate,
 };
 
-const processBlock = pipe(
-  parseTemplateBlock,
-  supplyDefaults,
-  ({ effect, text, ...event }) => {
-    const type = effect.split(/\s/)[0];
-    const minify = minifier[type] ?? minifyASSText;
-
-    return {
-      ...event,
-      effect,
-      text: minify(text)
-    };
+const processor = Object.assign(Object.create(null), {
+  'set-defaults': (defaults) => (block) => {
+    defaults.setDefaults(block);
+    return [];
   },
-  formatEvent
-);
+  'karatemplate': (defaults) => pipe(
+    defaults.supplyDefaults.bind(defaults),
+    ({ effect, text, ...event }) => {
+      const type = effect.split(/\s/)[0];
+      const minify = minifier[type] ?? minifyASSText;
+
+      return {
+        ...event,
+        effect,
+        text: minify(text)
+      };
+    },
+    formatEvent
+  ),
+});
+
+function processBlock(defaults) {
+  return (...args) => {
+    const { _directive = 'karatemplate', ...block } = parseTemplateBlock(...args);
+    const process = processor[_directive] ?? (() => () => []);
+    return process(defaults)(block);
+  };
+}
 
 function compile(input) {
+  const defaults = new AssDefaults();
+
   return pipe(
     removeComments,
     extractTemplateBlocks,
-    (blocks) => blocks.map(processBlock),
+    (blocks) => blocks.flatMap(processBlock(defaults)),
     (lines) => lines.join('\n')
   )(input);
 };

@@ -291,7 +291,7 @@ Another example with an empty Effect field (L14):
 %]
 
 Taking a previous example, notice how text inside exclamation marks
-are not treated specially (L14):
+are not treated specially (L15):
 
 %[
   !relayer(5)!
@@ -308,6 +308,112 @@ are not treated specially (L14):
   }
   !invalid lua!
 %]
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; DIRECTIVES
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+Special instructions can be given to the compiler through the use of
+directives. Directives modify how a block is handled and may change the
+behavior of the compiler.
+
+Directives are declared at the start of a block. They start with a `!`
+and are separated from the rest of the block by a `,`.
+
+The directives that are currently supported are:
+
+- `karatemplate`
+- `set-defaults`
+
+Blocks containing unrecognized directives are discarded, allowing for
+a certain degree of future extensibility in the format.
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; DIRECTIVE: karatemplate
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+A block with a `karatemplate` directive behaves as a block with no
+directive, exhibiting all of the behaviour that was previously explained
+above. More precisely, a block with no directive implies the
+`karatemplate` directive.
+
+Sample (L16):
+
+%[!karatemplate, template syl
+  {
+    \pos($x,$y)
+  }
+%]
+
+As it is implied, it is recommended not to use this directive when
+writing blocks and instead to simply omit the directive altogether.
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; DIRECTIVE: set-defaults
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+A block with a `set-defaults` directive does not produce output but
+instead instructs the compiler to use the supplied values as the
+default values for all blocks after the directive. The syntax for the
+body of the block is the same as for a regular karatemplate block.
+
+The following set-defaults block sets the defaults for all header
+fields:
+
+%[!set-defaults, \
+  ^ Dialogue \
+  # Singer A \
+  @ 1 \
+  < 0:02:00.00 > 0:04:00.00 \
+  $ OP-R \
+  =L 10 =R 50 =V 20
+%]
+
+The above also technically sets the empty string as the defaults for the
+Effect and Text fields. However, due to the nature of aegs blocks,
+defaults set for the Effect and Text fields will not behave as one might
+expect. The defaults will be recognized by the compiler, but since
+karatemplate blocks always set the Effect and Text fields, these
+defaults will never be used by karatemplate blocks.
+
+The declared defaults will be used by any karatemplate blocks that
+follow for any fields that are missing (L17):
+
+%[ template syl
+  {
+    \pos($x,$y)
+  }
+%]
+
+Of course, if a karatemplate block specifies a header field, that will
+override the default (L18):
+
+%[ template syl $ ED @ 0
+  {
+    \pos($x,$y)
+  }
+%]
+
+Any missing fields in a `set-defaults` block will be filled by the
+current defaults, allowing one to set the defaults for only specific
+fields:
+
+%[!set-defaults, # Singer B < 1:00:00.00 > 2:00:00.00 %]
+
+Here's an empty block to demonstrate the result (L19): %[%]
+
+The following sets the defaults back to the initial empty defaults:
+
+%[!set-defaults, \
+  ^ Comment \
+  # \
+  @ 0 \
+  < 0:00:00.00 > 0:00:00.00 \
+  $ Default \
+  =L 0 =R 0 =V 0
+%]
+
+And to demonstrate that the defaults are indeed reset (L20): %[%]
 
 %;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

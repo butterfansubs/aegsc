@@ -26,6 +26,12 @@ const sigilMap = {
 function parseTemplateBlock(templateBlock) {
   const parsedTemplate = {};
 
+  const [directiveMatch, directive] = templateBlock.match(/^\s*!([^,\n\s]*)\s*,/) ?? [];
+  if (directive) {
+    parsedTemplate._directive = directive;
+    templateBlock = templateBlock.slice(directiveMatch.length);
+  }
+
   const [header, ...text] = templateBlock.split(/(?<!\\)\n/);
   parsedTemplate.text = text.join('\n').trim();
 
