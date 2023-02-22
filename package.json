@@ -1,6 +1,6 @@
 {
   "name": "aegsc",
-  "version": "0.36.0",
+  "version": "0.38.0",
   "description": "Compiler for .aegs files",
   "main": "src/index.js",
   "bin": "bin/index.js",
