@@ -32,6 +32,6 @@
     "mocha": "^8.4.0"
   },
   "dependencies": {
-    "luamin": "^1.0.4"
+    "luamin": "mathiasbynens/luamin#2b701c92c60587af4d6ba44d758ff22424ec6c9c"
   }
 }
