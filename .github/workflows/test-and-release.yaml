@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build standalone binaries
-        run: npm run build:standalone:ver
+        run: npm run build:standalone:release
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
