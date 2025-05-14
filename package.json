@@ -9,7 +9,9 @@
     "require": "./src/index.js"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build:standalone": "scripts/build-standalone.js",
+    "build:standalone:release": "scripts/build-standalone.js \"$npm_package_version\""
   },
   "repository": {
     "type": "git",
@@ -29,7 +31,9 @@
   },
   "homepage": "https://github.com/butterfansubs/aegisc#readme",
   "devDependencies": {
-    "mocha": "^8.4.0"
+    "@yao-pkg/pkg": "^6.4.1",
+    "mocha": "^8.4.0",
+    "removeNPMAbsolutePaths": "^3.0.1"
   },
   "dependencies": {
     "luamin": "mathiasbynens/luamin#2b701c92c60587af4d6ba44d758ff22424ec6c9c"
