@@ -22,13 +22,14 @@ describe('compile', function() {
       $y
         + 20
     !)
+    !(a or b).c()!
     \c&H000000&
   }
   %; %] Comment containing end marker
   Line: %; Comment outside override
 %] Outside 2
 `;
-    const expected = String.raw`Comment: 1,0:12:34.567,1:23:45.678,Alternate,Actor,10,20,30,template line,{\pos(!$x+10!,!$y+20!)\c&H000000&}Line:`;
+    const expected = String.raw`Comment: 1,0:12:34.567,1:23:45.678,Alternate,Actor,10,20,30,template line,{\pos(!$x+10!,!$y+20!)!(a or b).c()!\c&H000000&}Line:`;
 
     const actual = compile(input);
 

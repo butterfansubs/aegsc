@@ -51,7 +51,11 @@ function minifyTemplate(template) {
 
   const minifiedTextSegments = minifyASSText(textSegments.join('!!')).split('!!');
   const minifiedCodeSegments = codeSegments.map((segment) => {
-    const minified = minifyLua(`return (${segment})`).replace(/return ?/, '');
+    // Aegisub's karaoke templater only wraps the code segment in `return (...)`,
+    // but luamin will only sometimes strip the parentheses.
+    // Wrap the expression in syntax that will not be reduced so it can be
+    // consistently stripped.
+    const minified = minifyLua(`return x(${segment})`).replace(/return x\((.*)\)/s, '$1');
     return `!${minified}!`;
   });
 
