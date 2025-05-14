@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      # prevents permission denied errors for GitHub npm dependencies
+      - name: Reconfigure git to use HTTP authentication
+        run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
       - name: Install dependencies
         run: npm ci
       - name: Run tests
@@ -35,6 +38,9 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
+      # prevents permission denied errors for GitHub npm dependencies
+      - name: Reconfigure git to use HTTP authentication
+        run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
       - name: Install dependencies
         run: npm ci
       - name: Build standalone binaries
