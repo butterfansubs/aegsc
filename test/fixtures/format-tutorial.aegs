@@ -44,11 +44,33 @@ is the header, which contains the block's metadata. The rest is the body,
 which contains the block's content.
 
 %;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%; SINGLE-LINE BLOCKS
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+For shorter lines, the single-line block syntax may be more convenient
+and compact.
+
+%; Single-line blocks start with a `%!` and continue until the end of the
+%; line. The body is separated from the header by a `|` and neither the
+%; header nor the body can have newlines, even if escaped.
+
+As before, single-line block markers in comments are not recognized.
+
+The following is the previous example written as a single-line block (L2):
+
+%! template syl | {\pos($x,$y)}
+
+If the header needs to contain a `|`, it can be escaped with a
+backslash (L3):
+
+%! template syl # Singer\|Alt | {\pos($x,$y)}
+
+%;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 %; BLOCK HEADERS
 %;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 The block header can contain a number of fields that map to ASS event
-fields. A block with a full header might look like the following (L2):
+fields. A block with a full header might look like the following (L4):
 
 %[ template syl ^ Comment # Singer A @ 1 < 0:02:00.00 > 0:04:00.00 $ OP-R =L 10 =R 50 =V 20
   {
@@ -82,7 +104,7 @@ If omitted, the following defaults will be supplied:
     =R   0
     =V   0
 
-The defaults can be seen in the output for the empty block (L3): %[%]
+The defaults can be seen in the output for the empty block (L5): %[%]
 
 Values that appear after these prefixes are trimmed of leading and
 trailing whitespace. It is not necessary to pad the prefixes with
@@ -91,7 +113,7 @@ whitespace, although it is recommended for readability.
 If a prefix character appears as part of the value for one of the fields,
 it must be escaped by a backslash. For example, to set the Style field
 to `1$OP` and the Actor field to `JP>EN` where `$` and `>` are special
-prefixes (L4):
+prefixes (L6):
 
 %[ template syl $ 1\$OP # JP\>EN
   {
@@ -100,7 +122,7 @@ prefixes (L4):
 %]
 
 The block header can be split onto multiple lines by adding a backslash
-at the end of the line (L5):
+at the end of the line (L7):
 
 %[ template syl \
    fxgroup auto \
@@ -115,7 +137,7 @@ During processing, the backslash is removed, each line in the header is
 trimmed of its leading and trailing whitespace, then lines are joined
 with a single space. Prefix parsing follows after.
 
-As demonstrated below (L6), comments can be added after the backslash
+As demonstrated below (L8), comments can be added after the backslash
 as long as only a single whitespace is used immediately before the
 comment marker. A line containing only (optional) whitespace and a
 comment can added between header lines. These are consequences of how
@@ -138,7 +160,7 @@ comments are processed.
 
 Following the header until the block end marker is the block text.
 
-The text is mostly free-form and may contain newlines (L7):
+The text is mostly free-form and may contain newlines (L9):
 
 %[ template syl
   {
@@ -146,7 +168,7 @@ The text is mostly free-form and may contain newlines (L7):
   }
 %]
 
-The block text may be empty (L8):
+The block text may be empty (L10):
 
 %[ template syl %]
 
@@ -160,7 +182,7 @@ value of the Effect field in the header.
 For Effect field values that start with `code`, the text is treated
 as Lua and is run through a Lua minifier. This allows the use of standard
 coding practices such as using newlines, indentation, and descriptive
-variable names (L9):
+variable names (L11):
 
 %[ code once
   function update_bpm()
@@ -173,7 +195,7 @@ variable names (L9):
   end 
 %]
 
-Lua comments will be removed during minification (L10):
+Lua comments will be removed during minification (L12):
 
 %[ code once
   --[[
@@ -207,7 +229,7 @@ The template text may contain inline code segments. An inline code
 segment starts on a `!` character and ends on the next `!` character,
 which may be on separate lines. Inline code is minified using a Lua
 minifier with special handling for dollar variables. The following block
-is an example that uses inline code (L11):
+is an example that uses inline code (L13):
 
 %[ template line
   !relayer(5)!
@@ -226,7 +248,7 @@ is an example that uses inline code (L11):
 
 Outside of inline code segments, newlines and leading whitespace are
 removed. Trailing whitespace is not removed, allowing lines to be
-joined by spaces by adding a trailing space. Example (L12):
+joined by spaces by adding a trailing space. Example (L14):
 
 %[ template line notext
   {
@@ -268,7 +290,7 @@ without special treatment of text delimited by exclamation marks.
 That is, the only minification that occurs is the removal of newlines
 and leading spaces.
 
-An example with `karaoke` in the Effect field (L13):
+An example with `karaoke` in the Effect field (L15):
 
 %[ karaoke
   {\k30}Yay!  %;
@@ -276,7 +298,7 @@ An example with `karaoke` in the Effect field (L13):
   {\k60}Yay!
 %]
 
-Another example with an empty Effect field (L14):
+Another example with an empty Effect field (L16):
 
 %[
   {
@@ -291,7 +313,7 @@ Another example with an empty Effect field (L14):
 %]
 
 Taking a previous example, notice how text inside exclamation marks
-are not treated specially (L15):
+are not treated specially (L17):
 
 %[
   !relayer(5)!
@@ -337,7 +359,7 @@ directive, exhibiting all of the behaviour that was previously explained
 above. More precisely, a block with no directive implies the
 `karatemplate` directive.
 
-Sample (L16):
+Sample (L18):
 
 %[!karatemplate, template syl
   {
@@ -377,7 +399,7 @@ karatemplate blocks always set the Effect and Text fields, these
 defaults will never be used by karatemplate blocks.
 
 The declared defaults will be used by any karatemplate blocks that
-follow for any fields that are missing (L17):
+follow for any fields that are missing (L19):
 
 %[ template syl
   {
@@ -386,7 +408,7 @@ follow for any fields that are missing (L17):
 %]
 
 Of course, if a karatemplate block specifies a header field, that will
-override the default (L18):
+override the default (L20):
 
 %[ template syl $ ED @ 0
   {
@@ -400,7 +422,7 @@ fields:
 
 %[!set-defaults, # Singer B < 1:00:00.00 > 2:00:00.00 %]
 
-Here's an empty block to demonstrate the result (L19): %[%]
+Here's an empty block to demonstrate the result (L21): %[%]
 
 The following sets the defaults back to the initial empty defaults:
 
@@ -413,7 +435,7 @@ The following sets the defaults back to the initial empty defaults:
   =L 0 =R 0 =V 0
 %]
 
-And to demonstrate that the defaults are indeed reset (L20): %[%]
+And to demonstrate that the defaults are indeed reset (L22): %[%]
 
 %;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
