@@ -94,62 +94,63 @@ describe('removeComments', function() {
 });
 
 describe('parseTemplateBlock', function() {
-  function b(content) {
-    return { type: 'block', content };
-  }
+  describe('multiline blocks', function() {
+    function b(content) {
+      return { type: 'block', content };
+    }
 
-  it('should return object with empty effect and text on empty input', function() {
-    const input = b('');
-    const expected = {
-      effect: '',
-      text: '',
-    };
+    it('should return object with empty effect and text on empty input', function() {
+      const input = b('');
+      const expected = {
+        effect: '',
+        text: '',
+      };
 
-    const actual = parseTemplateBlock(input);
+      const actual = parseTemplateBlock(input);
 
-    assert.deepEqual(actual, expected);
-  });
+      assert.deepEqual(actual, expected);
+    });
 
-  it('should parse fields', function() {
-    const input = b(`template syl ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99
+    it('should parse fields', function() {
+      const input = b(`template syl ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99
 {
     \\pos($sx, $sy)
 }`);
-    const expected = {
-      type: 'Dialogue',
-      layer: '0',
-      startTime: '0:12:34.56',
-      endTime: '1:23:45.67',
-      style: 'romaji',
-      actor: 'comment',
-      marginL: '97',
-      marginR: '98',
-      marginV: '99',
-      effect: 'template syl',
-      text: '{\n    \\pos($sx, $sy)\n}',
-    };
+      const expected = {
+        type: 'Dialogue',
+        layer: '0',
+        startTime: '0:12:34.56',
+        endTime: '1:23:45.67',
+        style: 'romaji',
+        actor: 'comment',
+        marginL: '97',
+        marginR: '98',
+        marginV: '99',
+        effect: 'template syl',
+        text: '{\n    \\pos($sx, $sy)\n}',
+      };
 
-    const actual = parseTemplateBlock(input);
+      const actual = parseTemplateBlock(input);
 
-    assert.deepEqual(actual, expected);
-  });
+      assert.deepEqual(actual, expected);
+    });
 
-  it('should preserve escaped sigil characters in the header', function() {
-    const input = b('template syl # \\@actor \\\\ \\#1 @ 1');
-    const expected = {
-      layer: '1',
-      actor: '@actor \\ #1',
-      effect: 'template syl',
-      text: '',
-    };
+    it('should preserve escaped sigil characters in the header', function() {
+      const input = b('template syl # \\@actor \\\\ \\#1 @ 1');
+      const expected = {
+        layer: '1',
+        actor: '@actor \\ #1',
+        effect: 'template syl',
+        text: '',
+      };
 
-    const actual = parseTemplateBlock(input);
+      const actual = parseTemplateBlock(input);
 
-    assert.deepEqual(actual, expected);
-  });
+      assert.deepEqual(actual, expected);
+    });
 
-  it('should allow the header to span multiple blocks by escaping the newline', function() {
-    const input = b(String.raw`a \
+    it('should allow the header to span multiple blocks by escaping the newline', function() {
+      const input = b(String.raw`a \
 b c\
        d\
 e \
@@ -157,47 +158,48 @@ e \
 @ 1
 text 1
 text 2`);
-    const expected = {
-      layer: '1',
-      actor: 'actor',
-      style: 'style',
-      effect: 'a b c d e',
-      text: 'text 1\ntext 2',
-    };
+      const expected = {
+        layer: '1',
+        actor: 'actor',
+        style: 'style',
+        effect: 'a b c d e',
+        text: 'text 1\ntext 2',
+      };
 
-    const actual = parseTemplateBlock(input);
+      const actual = parseTemplateBlock(input);
 
-    assert.deepEqual(actual, expected);
-  });
+      assert.deepEqual(actual, expected);
+    });
 
-  it('should recognize directives', function() {
-    const input = b(String.raw`!set-defaults, template # comment
+    it('should recognize directives', function() {
+      const input = b(String.raw`!set-defaults, template # comment
 text
 `);
-    const expected = {
-      _directive: 'set-defaults',
-      effect: 'template',
-      actor: 'comment',
-      text: 'text',
-    };
+      const expected = {
+        _directive: 'set-defaults',
+        effect: 'template',
+        actor: 'comment',
+        text: 'text',
+      };
 
-    const actual = parseTemplateBlock(input);
+      const actual = parseTemplateBlock(input);
 
-    assert.deepEqual(actual, expected);
-  });
+      assert.deepEqual(actual, expected);
+    });
 
-  it('should not recognize malformed directives', function() {
-    const input = b(String.raw`!set-defaults template # comment
+    it('should not recognize malformed directives', function() {
+      const input = b(String.raw`!set-defaults template # comment
 te,xt
 `);
-    const expected = {
-      effect: '!set-defaults template',
-      actor: 'comment',
-      text: 'te,xt',
-    };
+      const expected = {
+        effect: '!set-defaults template',
+        actor: 'comment',
+        text: 'te,xt',
+      };
 
-    const actual = parseTemplateBlock(input);
+      const actual = parseTemplateBlock(input);
 
-    assert.deepEqual(actual, expected);
+      assert.deepEqual(actual, expected);
+    });
   });
 });
