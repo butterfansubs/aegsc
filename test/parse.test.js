@@ -165,6 +165,14 @@ describe('removeComments', function() {
 });
 
 describe('parseTemplateBlock', function() {
+  describe('unknown blocks', function() {
+    it('should throw on unknown block types', function() {
+      const input = { type: 'notablocktype', content: 'content' };
+
+      assert.throws(() => parseTemplateBlock(input));
+    });
+  });
+
   describe('multiline blocks', function() {
     function b(content) {
       return { type: 'block', content };

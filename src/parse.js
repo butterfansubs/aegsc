@@ -38,9 +38,10 @@ const parseBlockConfigs = {
   },
 };
 
-function parseTemplateBlock({ type, content }) {
+function parseTemplateBlock(templateBlock) {
+  let { type, content } = templateBlock;
   const config = parseBlockConfigs[type];
-  if (!config) return undefined;
+  if (!config) throw new Error(`Unknown block type: ${type}`, { cause: templateBlock });
 
   const parsedTemplate = {};
 
