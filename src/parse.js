@@ -1,6 +1,10 @@
 function extractTemplateBlocks(text) {
-  return Array.from(text.matchAll(/%\[((?:[^%]|%[^\]])*)%\]/gs) ?? [])
-    .map(([, multiBlock]) => ({ type: 'block', content: multiBlock }));
+  return Array.from(text.matchAll(/(?:%\[((?:[^%]|%[^\]])*)%\])|(?:%!([^\n]*))/gs) ?? [])
+    .map(([, multiBlock, lineBlock]) => (
+      multiBlock !== undefined
+        ? { type: 'block', content: multiBlock }
+        : { type: 'line', content: lineBlock }
+    ));
 }
 
 function removeComments(text) {
@@ -22,24 +26,38 @@ const sigilMap = {
   '=R': 'marginR',
   '=V': 'marginV',
 };
+const sigilRegex = /(?<!\\)([@<>$#^]|=[LRV])/;
+const parseBlockConfigs = {
+  line: {
+    directiveRegex: /^\s*!([^,|\s]*)\s*,/,
+    bodySeparatorRegex: /(?<!\\)\|/,
+  },
+  block: {
+    directiveRegex: /^\s*!([^,\n\s]*)\s*,/,
+    bodySeparatorRegex: /(?<!\\)\n/,
+  },
+};
 
-function parseMultilineTemplateBlock({ content }) {
+function parseTemplateBlock({ type, content }) {
+  const config = parseBlockConfigs[type];
+  if (!config) return undefined;
+
   const parsedTemplate = {};
 
-  const [directiveMatch, directive] = content.match(/^\s*!([^,\n\s]*)\s*,/) ?? [];
+  const [directiveMatch, directive] = content.match(config.directiveRegex) ?? [];
   if (directive) {
     parsedTemplate._directive = directive;
     content = content.slice(directiveMatch.length);
   }
 
-  const [header, ...text] = content.split(/(?<!\\)\n/);
+  const [header, ...text] = content.split(config.bodySeparatorRegex);
   parsedTemplate.text = text.join('\n').trim();
 
   const [effect, ...headerTokens] = header
     .split('\\\n')
     .map((block) => block.trim())
     .join(' ')
-    .split(/(?<!\\)([@<>$#^]|=[LRV])/)
+    .split(sigilRegex)
     .map((token) => token.trim());
   parsedTemplate.effect = effect;
 
@@ -55,14 +73,6 @@ function parseMultilineTemplateBlock({ content }) {
   }
 
   return parsedTemplate;
-}
-
-function parseTemplateBlock(templateBlock) {
-  const blockParse = {
-    block: parseMultilineTemplateBlock,
-  }[templateBlock.type] ?? (() => undefined);
-
-  return blockParse(templateBlock);
 }
 
 module.exports = {

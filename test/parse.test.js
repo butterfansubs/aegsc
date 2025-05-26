@@ -62,6 +62,77 @@ Template 2
 
     assert.deepEqual(actual, expected);
   });
+
+  it('should extract single-line blocks', function() {
+    const input = '%!a';
+    const expected = [
+      { type: 'line', content: 'a' },
+    ];
+
+    const actual = extractTemplateBlocks(input);
+
+    assert.deepEqual(actual, expected);
+  });
+
+  it('should extract multiple single-line blocks', function() {
+    const input = '%!a\nTemplate 2\n%!b';
+    const expected = [
+      { type: 'line', content: 'a' },
+      { type: 'line', content: 'b' },
+    ];
+
+    const actual = extractTemplateBlocks(input);
+
+    assert.deepEqual(actual, expected);
+  });
+
+  it('should extract mixed blocks', function() {
+    const input = `
+%!a
+%[ b
+  bbb
+%]
+%! c
+`;
+    const expected = [
+      { type: 'line', content: 'a' },
+      { type: 'block', content: ' b\n  bbb\n' },
+      { type: 'line', content: ' c' },
+    ];
+
+    const actual = extractTemplateBlocks(input);
+
+    assert.deepEqual(actual, expected);
+  });
+
+  it('should not recognize a single-line marker in a multi-line block', function() {
+    const input = `
+%[ b
+%! bbb
+%]
+`;
+    const expected = [
+      { type: 'block', content: ' b\n%! bbb\n' },
+    ];
+
+    const actual = extractTemplateBlocks(input);
+
+    assert.deepEqual(actual, expected);
+  });
+
+  it('should not recognize a multi-line marker in a single-line block', function() {
+    const input = `
+%! bbb %[ b
+%]
+`;
+    const expected = [
+      { type: 'line', content: ' bbb %[ b' },
+    ];
+
+    const actual = extractTemplateBlocks(input);
+
+    assert.deepEqual(actual, expected);
+  });
 });
 
 describe('removeComments', function() {
@@ -191,6 +262,111 @@ text
       const input = b(String.raw`!set-defaults template # comment
 te,xt
 `);
+      const expected = {
+        effect: '!set-defaults template',
+        actor: 'comment',
+        text: 'te,xt',
+      };
+
+      const actual = parseTemplateBlock(input);
+
+      assert.deepEqual(actual, expected);
+    });
+  });
+
+  describe('single-line blocks', function() {
+    function i(content) {
+      return { type: 'line', content };
+    }
+
+    it('should return object with empty effect and text on empty input', function() {
+      const input = i('');
+      const expected = {
+        effect: '',
+        text: '',
+      };
+
+      const actual = parseTemplateBlock(input);
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should parse fields', function() {
+      const input = i(`template syl ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99 | {\\pos($sx, $sy)}`);
+      const expected = {
+        type: 'Dialogue',
+        layer: '0',
+        startTime: '0:12:34.56',
+        endTime: '1:23:45.67',
+        style: 'romaji',
+        actor: 'comment',
+        marginL: '97',
+        marginR: '98',
+        marginV: '99',
+        effect: 'template syl',
+        text: '{\\pos($sx, $sy)}',
+      };
+
+      const actual = parseTemplateBlock(input);
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should recognize everything after the | as the body', function() {
+      const input = i(`template syl | {\\pos($sx, $sy)} ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99`);
+      const expected = {
+        effect: 'template syl',
+        text: '{\\pos($sx, $sy)} ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99',
+      };
+
+      const actual = parseTemplateBlock(input);
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should preserve escaped body separator in the header', function() {
+      const input = i('template syl # Singer\\|Alt');
+      const expected = {
+        actor: 'Singer|Alt',
+        effect: 'template syl',
+        text: '',
+      };
+
+      const actual = parseTemplateBlock(input);
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should preserve escaped sigil characters in the header', function() {
+      const input = i('template syl # \\@actor \\\\ \\#1 @ 1');
+      const expected = {
+        layer: '1',
+        actor: '@actor \\ #1',
+        effect: 'template syl',
+        text: '',
+      };
+
+      const actual = parseTemplateBlock(input);
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should recognize directives', function() {
+      const input = i(String.raw`!set-defaults, template # comment | text`);
+      const expected = {
+        _directive: 'set-defaults',
+        effect: 'template',
+        actor: 'comment',
+        text: 'text',
+      };
+
+      const actual = parseTemplateBlock(input);
+
+      assert.deepEqual(actual, expected);
+    });
+
+    it('should not recognize malformed directives', function() {
+      const input = i(String.raw`!set-defaults template # comment | te,xt`);
       const expected = {
         effect: '!set-defaults template',
         actor: 'comment',
