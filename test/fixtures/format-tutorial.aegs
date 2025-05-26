@@ -192,7 +192,7 @@ variable names (L11):
       bpm = new_bpm
       update_fade_dur()
     end
-  end 
+  end
 %]
 
 Lua comments will be removed during minification (L12):
@@ -213,7 +213,7 @@ Lua comments will be removed during minification (L12):
       bpm = new_bpm
       update_fade_dur()
     end
-  end 
+  end
 %]
 
 Aegs comments may also be used as normal.
