@@ -59,8 +59,7 @@ This template is intended for The0x539's templater: https://github.com/The0x539/
   }
 %]
 
-%[ mixin line anystyle $ ED3-R \
-   < 0:22:37.83 > 0:23:56.99
+%[ mixin line anystyle
   {
     \yshad0.01
     \q2
