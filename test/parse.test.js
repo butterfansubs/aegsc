@@ -22,7 +22,9 @@ describe('extractTemplateBlocks', function() {
 
   it('should extract a template block', function() {
     const input = `%[a%]`;
-    const expected = ['a'];
+    const expected = [
+      { type: 'block', content: 'a' },
+    ];
 
     const actual = extractTemplateBlocks(input);
 
@@ -31,7 +33,9 @@ describe('extractTemplateBlocks', function() {
 
   it('should extract a template block with newlines', function() {
     const input = `%[\na\n%]`;
-    const expected = ['\na\n'];
+    const expected = [
+      { type: 'block', content: '\na\n' },
+    ];
 
     const actual = extractTemplateBlocks(input);
 
@@ -50,8 +54,8 @@ Template 2
 %]
     `;
     const expected = [
-      '\n  a\n',
-      '\n  b\n  c\n',
+      { type: 'block', content: '\n  a\n' },
+      { type: 'block', content: '\n  b\n  c\n' },
     ];
 
     const actual = extractTemplateBlocks(input);
@@ -90,8 +94,12 @@ describe('removeComments', function() {
 });
 
 describe('parseTemplateBlock', function() {
+  function b(content) {
+    return { type: 'block', content };
+  }
+
   it('should return object with empty effect and text on empty input', function() {
-    const input = '';
+    const input = b('');
     const expected = {
       effect: '',
       text: '',
@@ -103,10 +111,10 @@ describe('parseTemplateBlock', function() {
   });
 
   it('should parse fields', function() {
-    const input = `template syl ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99
+    const input = b(`template syl ^ Dialogue # comment @ 0 < 0:12:34.56 > 1:23:45.67 $ romaji =L 97 =R 98 =V 99
 {
     \\pos($sx, $sy)
-}`;
+}`);
     const expected = {
       type: 'Dialogue',
       layer: '0',
@@ -127,7 +135,7 @@ describe('parseTemplateBlock', function() {
   });
 
   it('should preserve escaped sigil characters in the header', function() {
-    const input = 'template syl # \\@actor \\\\ \\#1 @ 1';
+    const input = b('template syl # \\@actor \\\\ \\#1 @ 1');
     const expected = {
       layer: '1',
       actor: '@actor \\ #1',
@@ -141,14 +149,14 @@ describe('parseTemplateBlock', function() {
   });
 
   it('should allow the header to span multiple blocks by escaping the newline', function() {
-    const input = String.raw`a \
+    const input = b(String.raw`a \
 b c\
        d\
 e \
 # actor $ style \
 @ 1
 text 1
-text 2`;
+text 2`);
     const expected = {
       layer: '1',
       actor: 'actor',
@@ -163,9 +171,9 @@ text 2`;
   });
 
   it('should recognize directives', function() {
-    const input = String.raw`!set-defaults, template # comment
+    const input = b(String.raw`!set-defaults, template # comment
 text
-`;
+`);
     const expected = {
       _directive: 'set-defaults',
       effect: 'template',
@@ -179,9 +187,9 @@ text
   });
 
   it('should not recognize malformed directives', function() {
-    const input = String.raw`!set-defaults template # comment
+    const input = b(String.raw`!set-defaults template # comment
 te,xt
-`;
+`);
     const expected = {
       effect: '!set-defaults template',
       actor: 'comment',

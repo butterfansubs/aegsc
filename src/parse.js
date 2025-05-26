@@ -1,6 +1,6 @@
 function extractTemplateBlocks(text) {
   return Array.from(text.matchAll(/%\[((?:[^%]|%[^\]])*)%\]/gs) ?? [])
-    .map(([, block]) => block);
+    .map(([, multiBlock]) => ({ type: 'block', content: multiBlock }));
 }
 
 function removeComments(text) {
@@ -23,16 +23,16 @@ const sigilMap = {
   '=V': 'marginV',
 };
 
-function parseTemplateBlock(templateBlock) {
+function parseMultilineTemplateBlock({ content }) {
   const parsedTemplate = {};
 
-  const [directiveMatch, directive] = templateBlock.match(/^\s*!([^,\n\s]*)\s*,/) ?? [];
+  const [directiveMatch, directive] = content.match(/^\s*!([^,\n\s]*)\s*,/) ?? [];
   if (directive) {
     parsedTemplate._directive = directive;
-    templateBlock = templateBlock.slice(directiveMatch.length);
+    content = content.slice(directiveMatch.length);
   }
 
-  const [header, ...text] = templateBlock.split(/(?<!\\)\n/);
+  const [header, ...text] = content.split(/(?<!\\)\n/);
   parsedTemplate.text = text.join('\n').trim();
 
   const [effect, ...headerTokens] = header
@@ -55,6 +55,14 @@ function parseTemplateBlock(templateBlock) {
   }
 
   return parsedTemplate;
+}
+
+function parseTemplateBlock(templateBlock) {
+  const blockParse = {
+    block: parseMultilineTemplateBlock,
+  }[templateBlock.type] ?? (() => undefined);
+
+  return blockParse(templateBlock);
 }
 
 module.exports = {
