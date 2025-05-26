@@ -62,15 +62,12 @@ function parseTemplateBlock(templateBlock) {
     .map((token) => token.trim());
   parsedTemplate.effect = effect;
 
-  let tokens = headerTokens;
-  while (tokens.length) {
-    const [sigil, value, ...rest] = tokens;
+  for (let tokens = headerTokens; tokens.length;) {
+    const [sigil, value] = tokens.splice(0, 2);
 
     if (sigil in sigilMap) {
       parsedTemplate[sigilMap[sigil]] = value.replace(/\\(.)/g, '$1');
     }
-
-    tokens = rest;
   }
 
   return parsedTemplate;
