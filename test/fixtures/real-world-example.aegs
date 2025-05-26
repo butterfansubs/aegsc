@@ -3,7 +3,7 @@ by The0x539 for the ED of the LostYears release of Fire Force Season 2.
 
 This template is intended for The0x539's templater: https://github.com/The0x539/Aegisub-Scripts
 
-%[!set-defaults, $ ED3-R < 0:22:37.83 > 0:23:56.99 %]
+%!!set-defaults, $ ED3-R < 0:22:37.83 > 0:23:56.99
 
 %[ code once
   function ease()
@@ -38,26 +38,9 @@ This template is intended for The0x539's templater: https://github.com/The0x539/
   end
 %]
 
-%[ template line anystyle @ 3
-  {
-    !color('090812')!
-  }
-%]
-
-%[ template line anystyle @ 2
-  {
-    !color('FBFCFA')!
-    \bord3
-  }
-%]
-
-%[ template line @ 1 # highlight
-  {
-    !color('FBFCFA')!
-    \bord7
-    \blur5
-  }
-%]
+%! template line anystyle @ 3    | {!color('090812')!}
+%! template line anystyle @ 2    | {!color('FBFCFA')!\bord3}
+%! template line @ 1 # highlight | {!color('FBFCFA')!\bord7\blur5}
 
 %[ mixin line anystyle
   {
